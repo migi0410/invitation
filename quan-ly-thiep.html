@@ -316,7 +316,7 @@
       const origin = window.location.origin;
       const path = window.location.pathname;
       if (origin && origin !== 'null' && !origin.startsWith('file:')) {
-        const cleanDir = path.replace(/\/(quan-ly-thiep\.html|quan-ly|admin|quan_ly_thiep_zunzun\.html)$/, '');
+        const cleanDir = path.replace(/\/(quan-ly-thiep(\.html)?|quan-ly|admin|quan_ly_thiep_zunzun(\.html)?)$/, '');
         return `${origin}${cleanDir}/`;
       }
       const loc = window.location.href.split('?')[0].split('#')[0];

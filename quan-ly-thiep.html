@@ -179,10 +179,11 @@
           <div>
             <span class="text-[11px] font-mono-ai text-[#6EE7B7] uppercase block">✨ XEM TRƯỚC THIỆP CÁ NHÂN HÓA</span>
             <h3 class="font-serif-luxury text-xl font-bold text-[#E6C762]">
-              Thiệp Của: <span id="preview-guest-title" class="text-[#FAF6EE]">[ TÊN KHÁCH MỜI ]</span>
+              Thiệp Của: <span id="preview-guest-title" class="text-[#FAF6EE]">Thiệp Chung (Không ô tên)</span>
             </h3>
           </div>
-          <div class="flex gap-1.5">
+          <div class="flex gap-1.5 flex-wrap">
+            <button type="button" onclick="selectNoNameCard()" class="px-2.5 py-1 rounded-lg bg-[#1E2F5D] border border-[#D4AF37]/60 text-[#E6C762] text-xs font-bold cursor-pointer" title="Xem & tải thiệp chung không có ô tên">Thiệp K.Tên</button>
             <button type="button" onclick="previewPoseChange('card1')" id="btn-pose-1" class="px-2.5 py-1 rounded-lg bg-[#D4AF37] text-[#0F172A] text-xs font-bold cursor-pointer">Ảnh 1</button>
             <button type="button" onclick="previewPoseChange('card2')" id="btn-pose-2" class="px-2.5 py-1 rounded-lg bg-[#090F20] border border-[#D4AF37]/50 text-[#FAF6EE] text-xs font-bold cursor-pointer">Ảnh 2</button>
           </div>
@@ -306,7 +307,7 @@
     const CARD_ASSETS = { card1: "./assets/card1.webp", card2: "./assets/card2.webp" };
     const CARD_IMAGES = {};
     let currentPreviewPose = 'card1';
-    let currentPreviewName = '[ TÊN KHÁCH MỜI ]';
+    let currentPreviewName = '';
     let guestsCache = [];
     let wishesCache = [];
 
@@ -327,7 +328,14 @@
 
     function buildGuestUrl(name, pose) {
       const base = document.getElementById('base-url-input')?.value.trim() || detectDefaultInvitationUrl();
-      const cleanName = (name && name.trim()) ? name.trim() : '[ TÊN KHÁCH MỜI ]';
+      const cleanName = (name && name.trim() && name !== '[ TÊN KHÁCH MỜI ]') ? name.trim() : '';
+      if (!cleanName) {
+        if (pose === 'card2') {
+          const sep = base.includes('?') ? '&' : '?';
+          return `${base}${sep}pose=card2`;
+        }
+        return base;
+      }
       const sep = base.includes('?') ? '&' : '?';
       const poseQuery = (pose === 'card2') ? '&pose=card2' : '';
       return `${base}${sep}to=${encodeURIComponent(cleanName)}${poseQuery}`;
@@ -417,9 +425,15 @@
       renderGuestTable();
     }
 
+    function selectNoNameCard() {
+      const input = document.getElementById('guest-name-input');
+      if (input) input.value = '';
+      previewGuestCard('');
+    }
+
     function previewGuestCard(val) {
-      currentPreviewName = (val && val.trim()) ? val.trim() : '[ TÊN KHÁCH MỜI ]';
-      document.getElementById('preview-guest-title').textContent = currentPreviewName;
+      currentPreviewName = (val && val.trim()) ? val.trim() : '';
+      document.getElementById('preview-guest-title').textContent = currentPreviewName || 'Thiệp Chung (Không ô tên)';
       updateLiveLinkBar();
       renderPreviewCanvas();
     }
@@ -456,35 +470,51 @@
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.drawImage(baseImg, 0, 0);
 
+      const hasName = Boolean(currentPreviewName && currentPreviewName.trim() && currentPreviewName !== '[ TÊN KHÁCH MỜI ]');
+      if (!hasName) return;
+
       const cx = canvas.width / 2;
-      ctx.fillStyle = '#FAF6EE';
-      ctx.fillRect(cx - 230, 766, 460, 34);
-      ctx.font = 'bold 21px "Plus Jakarta Sans", "Segoe UI", sans-serif';
-      ctx.fillStyle = '#141E3C';
-      ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText('TRÂN TRỌNG KÍNH MỜI BẠN', cx, 784);
+      const nameStr = currentPreviewName.trim();
+      const boxW = Math.min(740, Math.max(480, nameStr.length * 22 + 140));
+      const boxH = 60;
+      const boxX = cx - boxW / 2;
+      const boxY = 806;
 
-      const boxW = 540, boxH = 56, boxX = cx - boxW / 2, boxY = 806;
       ctx.save();
-      ctx.fillStyle = '#FAF6EE';
-      ctx.fillRect(boxX - 8, boxY - 3, boxW + 16, boxH + 6);
+      const r = 13;
+      ctx.beginPath();
+      ctx.moveTo(boxX + r, boxY);
+      ctx.lineTo(boxX + boxW - r, boxY);
+      ctx.quadraticCurveTo(boxX + boxW, boxY, boxX + boxW, boxY + r);
+      ctx.lineTo(boxX + boxW, boxY + boxH - r);
+      ctx.quadraticCurveTo(boxX + boxW, boxY + boxH, boxX + boxW - r, boxY + boxH);
+      ctx.lineTo(boxX + r, boxY + boxH);
+      ctx.quadraticCurveTo(boxX, boxY + boxH, boxX, boxY + boxH - r);
+      ctx.lineTo(boxX, boxY + r);
+      ctx.quadraticCurveTo(boxX, boxY, boxX + r, boxY);
+      ctx.closePath();
 
+      const grad = ctx.createLinearGradient(boxX, boxY, boxX, boxY + boxH);
+      grad.addColorStop(0, 'rgba(255, 253, 246, 0.98)');
+      grad.addColorStop(1, 'rgba(244, 234, 206, 0.98)');
+      ctx.fillStyle = grad;
+      ctx.fill();
+
+      ctx.lineWidth = 2.2;
       ctx.strokeStyle = '#C59B27';
-      ctx.lineWidth = 2;
-      ctx.strokeRect(boxX + 10, boxY + 2, boxW - 20, boxH - 4);
+      ctx.stroke();
 
-      ctx.fillStyle = 'rgba(253, 249, 240, 0.96)';
-      ctx.fillRect(boxX + 12, boxY + 4, boxW - 24, boxH - 8);
-
-      let fontSize = 27;
-      if (currentPreviewName.length > 22) fontSize = 22;
-      if (currentPreviewName.length > 30) fontSize = 18;
-      ctx.font = `bold ${fontSize}px "Cormorant Garamond", Georgia, serif`;
-      ctx.fillStyle = '#141E3C';
       ctx.textAlign = 'center';
-      ctx.textBaseline = 'middle';
-      ctx.fillText(currentPreviewName, cx, boxY + boxH / 2 + 1);
+      ctx.fillStyle = '#8A640F';
+      ctx.font = 'bold 12.5px "Segoe UI", Arial, sans-serif';
+      ctx.fillText('TRÂN TRỌNG KÍNH MỜI BẠN', cx, boxY + 19);
+
+      let fSize = 25;
+      if (nameStr.length > 28) fSize = 20;
+      else if (nameStr.length > 22) fSize = 22;
+      ctx.fillStyle = '#141E3C';
+      ctx.font = `bold ${fSize}px "Palatino Linotype", Georgia, "Times New Roman", serif`;
+      ctx.fillText(nameStr, cx, boxY + 48);
       ctx.restore();
     }
 
@@ -602,7 +632,7 @@
 
     function copyInviteMessage(name, pose) {
       const url = buildGuestUrl(name, pose);
-      const msg = `Trân trọng thân mời ${name} đến chung vui tại Lễ Tốt Nghiệp của Hà Minh Dũng (Zunzun) vào lúc 09:30 - 12:00 Chủ Nhật ngày 08.11.2026 tại Sảnh Trống Đồng - ĐH FPT TP.HCM!\n👉 Mở thiệp mời dành riêng cho ${name} tại đây nhé: ${url}`;
+      const msg = `Trân trọng thân mời ${name} đến chung vui tại Lễ Tốt Nghiệp của Hà Minh Dũng (Zunzun) vào lúc 09:30 - 12:00 Chủ Nhật ngày 08.11.2026 tại Sảnh Trống Đồng - ĐH FPT TP.HCM (SĐT/Zalo Dũng: 0938 709 235)!\n👉 Mở thiệp mời dành riêng cho ${name} tại đây nhé: ${url}`;
       copyText(msg, `💬 Đã copy lời mời + link của "${name}"!`);
     }
 

@@ -328,6 +328,20 @@
             </div>
           </div>
         </div>
+
+        <!-- DIRECT CONTACT BAR: PHONE, ZALO, FACEBOOK MESSENGER -->
+        <div class="mt-3 pt-3 border-t border-[#D4AF37]/30 flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-xs">
+          <span class="font-mono-ai text-[#E6C762] font-bold">📲 Liên hệ Dũng khi tới trường:</span>
+          <a href="tel:0938709235" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#0A1022] hover:bg-[#1E2F5D] border border-[#D4AF37]/60 text-[#FAF6EE] font-bold transition">
+            📞 0938 709 235
+          </a>
+          <a href="https://zalo.me/0938709235" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#0A1022] hover:bg-[#1E2F5D] border border-[#38BDF8]/60 text-[#7DD3FC] font-bold transition">
+            💬 Zalo: 0938 709 235
+          </a>
+          <a href="https://www.facebook.com/dung.haminh.161/" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#0A1022] hover:bg-[#1E2F5D] border border-[#60A5FA]/60 text-[#93C5FD] font-bold transition">
+            💙 Messenger / Facebook
+          </a>
+        </div>
       </div>
     </header>
 
@@ -622,9 +636,18 @@
               </div>
             </div>
 
-            <a href="https://maps.google.com/?q=Dai+hoc+FPT+TP+HCM+Lo+E2a-7+Duong+D1+Khu+Cong+Nghe+Cao" target="_blank" rel="noopener noreferrer" class="w-full py-2.5 px-4 rounded-xl gold-foil-surface text-[#141E3C] font-extrabold text-xs text-center shadow-lg hover:opacity-95 transition">
+            <a href="https://maps.google.com/?q=Dai+hoc+FPT+TP+HCM+Lo+E2a-7+Duong+D1+Khu+Cong+Nghe+Cao" target="_blank" rel="noopener noreferrer" class="w-full py-2.5 px-4 rounded-xl bg-[#D4AF37] hover:bg-[#E0BE4C] text-[#0F172A] font-extrabold text-xs text-center shadow-lg transition">
               🗺️ Mở Google Maps Tới Trường ĐH FPT TP.HCM
             </a>
+
+            <div class="grid grid-cols-2 gap-2">
+              <a href="https://zalo.me/0938709235" target="_blank" rel="noopener noreferrer" class="py-2 px-3 rounded-xl bg-[#0A1022] hover:bg-[#1E2F5D] border border-[#D4AF37]/55 text-[#FAF6EE] font-bold text-xs text-center transition">
+                📞 Zalo: 0938 709 235
+              </a>
+              <a href="https://www.facebook.com/dung.haminh.161/" target="_blank" rel="noopener noreferrer" class="py-2 px-3 rounded-xl bg-[#0A1022] hover:bg-[#1E2F5D] border border-[#D4AF37]/55 text-[#FAF6EE] font-bold text-xs text-center transition">
+                💙 Nhắn Messenger
+              </a>
+            </div>
           </div>
         </div>
 
@@ -701,7 +724,7 @@
     const ASSETS = { card1: "./assets/card1.webp", card2: "./assets/card2.webp", map: "./assets/map-tang-g.webp" };
     const IMAGES = {};
     let currentPose = 'card1';
-    let guestName = '[ TÊN KHÁCH MỜI ]';
+    let guestName = '';
     let currentAct = 1;
     let warpFactor = 1;
 
@@ -750,13 +773,22 @@
     }
 
     function setLiveGuestName(val) {
-      guestName = (val && val.trim()) ? val.trim() : '[ TÊN KHÁCH MỜI ]';
+      guestName = (val && val.trim()) ? val.trim() : '';
       updateAllGuestNameSlots();
     }
 
     function updateAllGuestNameSlots() {
-      document.getElementById('intro-guest-name').textContent = guestName;
-      document.getElementById('stage-guest-name').textContent = guestName;
+      const introEl = document.getElementById('intro-guest-name');
+      const stageEl = document.getElementById('stage-guest-name');
+      const hasName = Boolean(guestName && guestName.trim() && guestName !== '[ TÊN KHÁCH MỜI ]');
+      if (introEl) {
+        introEl.textContent = hasName ? guestName : '';
+        introEl.style.display = hasName ? 'block' : 'none';
+      }
+      if (stageEl) {
+        stageEl.textContent = hasName ? guestName : '';
+        stageEl.style.display = hasName ? 'block' : 'none';
+      }
       renderCardCanvas();
     }
 
@@ -772,9 +804,11 @@
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.drawImage(baseImg, 0, 0);
 
-      // 1. DEDICATED GUEST NAME SLOT (y = 806..866)
+      // 1. DEDICATED GUEST NAME SLOT (y = 806..866) — Only drawn when guestName is provided!
+      const hasName = Boolean(guestName && guestName.trim() && guestName !== '[ TÊN KHÁCH MỜI ]');
+      if (!hasName) return;
       const cx = canvas.width / 2; // 448
-      const nameStr = guestName || '[ TÊN KHÁCH MỜI ]';
+      const nameStr = guestName.trim();
       const boxW = Math.min(740, Math.max(480, nameStr.length * 22 + 140));
       const boxH = 60;
       const boxX = cx - boxW / 2;
@@ -1079,7 +1113,7 @@
 
       try {
         if (window.ZunzunDB) {
-          await window.ZunzunDB.sendWish(guestName, msg);
+          await window.ZunzunDB.sendWish(guestName || 'Khách mời (Thiệp chung)', msg);
         }
       } catch (e) {}
 

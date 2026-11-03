@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hộp Thư Lời Chúc Của Zunzun — Hà Minh Dũng (08.11.2026)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="./assets/config.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap');
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #0B1021;
+      color: #FAF6EE;
+      min-height: 100vh;
+    }
+    .font-serif-luxury {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+    }
+    .font-mono-ai {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .glass-card {
+      background: linear-gradient(160deg, #162244 0%, #0E162E 65%, #090F20 100%);
+      border: 1.5px solid rgba(212, 175, 55, 0.45);
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.55);
+    }
+  </style>
+</head>
+<body class="py-8 px-4 sm:px-6">
+
+  <main class="max-w-4xl mx-auto">
+    <div class="glass-card rounded-3xl p-6 sm:p-8 mb-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#10B981]/15 border border-[#10B981]/50 text-[#6EE7B7] font-mono-ai text-xs font-bold">
+            💌 TRANG RIÊNG CỦA ZUNZUN · HÀ MINH DŨNG
+          </span>
+          <h1 class="font-serif-luxury text-3xl sm:text-4xl font-bold text-[#E6C762] mt-2">
+            Đôi Lời Thầm Kín Gửi Zunzun
+          </h1>
+          <p class="text-xs sm:text-sm text-[#CBD5E1] mt-1">
+            Danh sách toàn bộ lời chúc từ các khách mời (đồng bộ trực tiếp từ Supabase Cloud).
+          </p>
+        </div>
+
+        <div class="flex items-center gap-2.5 shrink-0">
+          <div class="px-4 py-2.5 rounded-2xl bg-[#090F20] border border-[#D4AF37]/50 text-center">
+            <span id="total-wishes-count" class="font-serif-luxury text-2xl font-bold text-[#E6C762] block leading-none">0</span>
+            <span class="text-[11px] font-mono-ai text-[#CBD5E1]">Lời chúc</span>
+          </div>
+          <button type="button" onclick="exportWishesJson()" class="px-4 py-2.5 rounded-xl bg-[#D4AF37] text-[#0F172A] font-extrabold text-xs sm:text-sm shadow-lg hover:bg-[#E0BE4C] transition cursor-pointer">
+            📥 Tải file JSON
+          </button>
+        </div>
+      </div>
+
+      <div class="mt-5 flex flex-col sm:flex-row gap-2.5">
+        <input id="search-guest-input" type="text" oninput="renderWishesList()" placeholder="🔍 Tìm theo tên người gửi hoặc nội dung lời chúc..." class="flex-1 px-4 py-2.5 rounded-xl bg-[#090F20] border border-[#D4AF37]/40 text-sm text-[#FAF6EE] focus:outline-none focus:border-[#E6C762]" />
+        <button type="button" onclick="loadAndRender()" class="px-4 py-2.5 rounded-xl bg-[#1E2F5D] border border-[#D4AF37]/50 text-[#FAF6EE] text-xs font-mono-ai font-bold hover:border-[#E6C762] transition cursor-pointer">
+          🔄 Làm mới từ Cloud
+        </button>
+      </div>
+    </div>
+
+    <div id="wishes-container" class="space-y-3.5"></div>
+  </main>
+
+  <script>
+    let allWishes = [];
+
+    function escapeHtml(str) {
+      return String(str || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;');
+    }
+
+    async function loadAndRender() {
+      if (window.ZunzunDB) {
+        allWishes = await window.ZunzunDB.fetchWishes();
+      }
+      renderWishesList();
+    }
+
+    function renderWishesList() {
+      const container = document.getElementById('wishes-container');
+      const countEl = document.getElementById('total-wishes-count');
+      const query = (document.getElementById('search-guest-input')?.value || '').trim().toLowerCase();
+
+      if (countEl) countEl.textContent = String(allWishes.length);
+
+      const filtered = query
+        ? allWishes.filter(w =>
+            String(w.guest || '').toLowerCase().includes(query) ||
+            String(w.msg || '').toLowerCase().includes(query)
+          )
+        : allWishes;
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="glass-card rounded-3xl p-8 text-center">
+            <div class="text-3xl mb-2">💌</div>
+            <p class="text-sm sm:text-base font-semibold text-[#E6C762]">Chưa có lời chúc nào được gửi</p>
+            <p class="text-xs text-[#94A3B8] mt-1">Khi khách mời bấm "Gửi" ở mục Đôi lời thầm kín gửi Zunzun trên thiệp, lời chúc kèm tên người gửi sẽ hiện tại đây.</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = filtered.map((item, idx) => `
+        <div class="glass-card rounded-2xl p-5 transition hover:border-[#E6C762]">
+          <div class="flex items-center justify-between flex-wrap gap-2 pb-2.5 border-b border-[#D4AF37]/25">
+            <div class="flex items-center gap-2">
+              <span class="px-2.5 py-0.5 rounded-lg bg-[#1E2F5D] border border-[#D4AF37]/50 text-[#E6C762] font-mono-ai text-xs font-bold">
+                #${filtered.length - idx}
+              </span>
+              <span class="text-sm sm:text-base font-bold text-[#E6C762]">
+                👤 ${escapeHtml(item.guest || 'Khách mời')}
+              </span>
+            </div>
+            <span class="text-xs font-mono-ai text-[#6EE7B7]">
+              🕒 ${escapeHtml(item.time || '')}
+            </span>
+          </div>
+          <p class="text-sm sm:text-base text-[#FAF6EE] mt-3 leading-relaxed whitespace-pre-line">${escapeHtml(item.msg)}</p>
+        </div>
+      `).join('');
+    }
+
+    function exportWishesJson() {
+      const blob = new Blob([JSON.stringify(allWishes, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'loi_chuc_gui_zunzun_2026.json';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    window.addEventListener('DOMContentLoaded', loadAndRender);
+  </script>
+</body>
+</html>

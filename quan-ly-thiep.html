@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Quản Lý & Tạo Thiệp Tốt Nghiệp — Hà Minh Dũng (Zunzun)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="./assets/config.js"></script>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap');
+
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #0B1021;
+      color: #FAF6EE;
+      min-height: 100vh;
+    }
+    .font-serif-luxury {
+      font-family: 'Cormorant Garamond', Georgia, serif;
+    }
+    .font-mono-ai {
+      font-family: 'JetBrains Mono', monospace;
+    }
+    .royal-navy-panel {
+      background: linear-gradient(160deg, #162244 0%, #0E162E 65%, #090F20 100%);
+      border: 1.5px solid rgba(212, 175, 55, 0.45);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.55);
+    }
+  </style>
+</head>
+<body class="py-6 px-3 sm:px-6">
+
+  <main class="max-w-6xl mx-auto space-y-6">
+
+    <!-- HEADER & TAB SWITCHER -->
+    <header class="royal-navy-panel rounded-3xl p-5 sm:p-7 flex flex-col md:flex-row md:items-center justify-between gap-4">
+      <div>
+        <div class="flex items-center gap-2 flex-wrap">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#10B981]/15 border border-[#10B981]/50 text-[#6EE7B7] font-mono-ai text-xs font-bold">
+            🎓 QUẢN LÝ THIỆP · HÀ MINH DŨNG (ZUNZUN)
+          </span>
+          <span id="sb-status-badge" class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/15 border border-amber-400/50 text-amber-300 font-mono-ai text-xs font-bold">
+            🟡 Lưu tại trình duyệt (Chưa gắn Supabase)
+          </span>
+        </div>
+        <h1 class="font-serif-luxury text-2xl sm:text-4xl font-bold text-[#E6C762] mt-2">
+          Tự Tạo Link Thiệp & Quản Lý Khách Mời
+        </h1>
+        <p class="text-xs sm:text-sm text-[#CBD5E1] mt-0.5">
+          Điền tên khách mời để tạo link thiệp riêng ngay lập tức · <strong class="text-[#FAF6EE]">09:30 - 12:00 | 08.11.2026 (Sảnh Trống Đồng FPTU)</strong>
+        </p>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <div class="flex items-center gap-2 shrink-0 flex-wrap">
+        <button id="tab-btn-cards" type="button" onclick="switchTab('cards')" class="px-4 py-2.5 rounded-xl bg-[#D4AF37] text-[#0F172A] font-extrabold text-xs sm:text-sm transition cursor-pointer">
+          🎴 Tạo & Quản Lý Thiệp (<span id="guest-total-badge">0</span>)
+        </button>
+        <button id="tab-btn-wishes" type="button" onclick="switchTab('wishes')" class="px-4 py-2.5 rounded-xl bg-[#1E2F5D] border border-[#D4AF37]/50 text-[#FAF6EE] font-bold text-xs sm:text-sm hover:border-[#E6C762] transition cursor-pointer">
+          💌 Đôi Lời Gửi Zunzun (<span id="wish-total-badge">0</span>)
+        </button>
+        <button id="tab-btn-cloud" type="button" onclick="switchTab('cloud')" class="px-4 py-2.5 rounded-xl bg-[#1E2F5D] border border-[#D4AF37]/50 text-[#FAF6EE] font-bold text-xs sm:text-sm hover:border-[#E6C762] transition cursor-pointer">
+          ☁️ Cấu Hình Supabase & Link Ảnh
+        </button>
+      </div>
+    </header>
+
+    <!-- Toast notification -->
+    <div id="manager-toast" class="hidden rounded-xl px-4 py-2.5 bg-[#10B981]/20 border border-[#10B981] text-[#6EE7B7] text-xs sm:text-sm font-bold text-center"></div>
+
+    <!-- ===================================================================== -->
+    <!-- TAB 1: CREATE & MANAGE GUEST INVITATIONS                              -->
+    <!-- ===================================================================== -->
+    <section id="tab-cards" class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+      <!-- LEFT 7 COLS: ADD GUESTS & GUEST LIST TABLE -->
+      <div class="lg:col-span-7 space-y-6">
+
+        <!-- 1. FORM TẠO NHANH THIỆP -->
+        <div class="royal-navy-panel rounded-3xl p-5 sm:p-6 space-y-4">
+          <div class="flex items-center justify-between flex-wrap gap-2">
+            <h2 class="font-serif-luxury text-xl sm:text-2xl font-bold text-[#E6C762]">
+              1. Điền Tên & Tạo Link Thiệp Ngay
+            </h2>
+            <button type="button" onclick="toggleBulkMode()" class="text-xs font-mono-ai text-[#6EE7B7] underline hover:text-white cursor-pointer">
+              + Dán danh sách nhiều tên cùng lúc
+            </button>
+          </div>
+
+          <div id="single-input-box" class="space-y-3">
+            <div class="flex flex-col sm:flex-row gap-2.5">
+              <input
+                id="guest-name-input"
+                type="text"
+                placeholder="Nhập tên khách mời (VD: Bạn Minh Anh, Anh Tuấn...)"
+                oninput="previewGuestCard(this.value)"
+                onkeydown="if(event.key==='Enter'){ event.preventDefault(); addSingleGuest(); }"
+                class="flex-1 px-4 py-3 rounded-xl bg-[#090F20] border border-[#D4AF37]/60 text-[#FAF6EE] placeholder-[#94A3B8] text-sm sm:text-base font-bold focus:outline-none focus:border-[#E6C762]"
+              />
+              <select id="guest-pose-select" onchange="previewPoseChange(this.value)" class="px-3.5 py-3 rounded-xl bg-[#090F20] border border-[#D4AF37]/60 text-[#E6C762] text-xs sm:text-sm font-bold focus:outline-none">
+                <option value="card1">Ảnh 1: Đeo Sash</option>
+                <option value="card2">Ảnh 2: Cầm Bằng Đỏ</option>
+              </select>
+              <button type="button" onclick="addSingleGuest()" class="px-5 py-3 rounded-xl bg-[#D4AF37] hover:bg-[#E0BE4C] text-[#0F172A] font-extrabold text-sm shadow-md transition shrink-0 cursor-pointer">
+                + Tạo Link
+              </button>
+            </div>
+
+            <!-- Instant Generated Link Box -->
+            <div class="rounded-2xl p-3.5 bg-[#090F20] border border-[#D4AF37]/40 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+              <div class="min-w-0 flex-1">
+                <span class="text-[11px] font-mono-ai text-[#94A3B8] block">🔗 LINK THIỆP TỰ ĐỘNG THEO TÊN ĐANG NHẬP:</span>
+                <input id="live-generated-url" type="text" readonly class="w-full bg-transparent text-[#6EE7B7] font-mono-ai text-xs sm:text-sm font-semibold focus:outline-none truncate mt-0.5" />
+              </div>
+              <div class="flex items-center gap-1.5 shrink-0">
+                <button type="button" onclick="copyLiveUrl()" class="px-3 py-1.5 rounded-lg bg-[#1E2F5D] hover:bg-[#283E7A] border border-[#D4AF37]/50 text-[#FAF6EE] text-xs font-bold transition cursor-pointer">
+                  📋 Copy Link
+                </button>
+                <a id="live-open-url" href="#" target="_blank" class="px-3 py-1.5 rounded-lg bg-[#10B981]/20 hover:bg-[#10B981]/30 border border-[#10B981]/60 text-[#6EE7B7] text-xs font-bold transition">
+                  👁️ Mở Thiệp
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- Bulk Guest Input -->
+          <div id="bulk-input-box" class="hidden space-y-3 pt-2 border-t border-[#D4AF37]/25">
+            <label class="block text-xs text-[#CBD5E1]">
+              Dán danh sách khách mời (<strong class="text-[#E6C762]">mỗi dòng 1 tên</strong>) để tạo hàng loạt link cùng lúc:
+            </label>
+            <textarea id="bulk-names-textarea" rows="5" placeholder="Nguyễn Văn A&#10;Trần Thị B&#10;Anh Hoàng&#10;Chị Lan..." class="w-full px-3.5 py-2.5 rounded-xl bg-[#090F20] border border-[#D4AF37]/60 text-[#FAF6EE] placeholder-[#94A3B8] text-sm focus:outline-none focus:border-[#E6C762]"></textarea>
+            <div class="flex justify-end gap-2">
+              <button type="button" onclick="toggleBulkMode()" class="px-4 py-2 rounded-xl bg-[#1E2F5D] text-xs font-bold text-[#CBD5E1] cursor-pointer">
+                Đóng
+              </button>
+              <button type="button" onclick="addBulkGuests()" class="px-5 py-2 rounded-xl bg-[#D4AF37] hover:bg-[#E0BE4C] text-[#0F172A] font-extrabold text-xs sm:text-sm cursor-pointer">
+                ⚡ Tạo Tất Cả Link Trong Danh Sách
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. DANH SÁCH KHÁCH MỜI & LINK ĐÃ TẠO -->
+        <div class="royal-navy-panel rounded-3xl p-5 sm:p-6 space-y-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[#D4AF37]/25">
+            <div>
+              <h2 class="font-serif-luxury text-xl sm:text-2xl font-bold text-[#E6C762]">
+                2. Danh Sách Thiệp Đã Tạo (<span id="list-count-txt">0</span>)
+              </h2>
+              <p class="text-xs text-[#94A3B8]">
+                Tự động đồng bộ với Supabase Cloud (nếu đã kết nối) và lưu dự phòng tại trình duyệt
+              </p>
+            </div>
+
+            <div class="flex items-center gap-2 flex-wrap">
+              <button type="button" onclick="copyAllGuestLinks()" class="px-3 py-2 rounded-xl bg-[#1E2F5D] hover:bg-[#283E7A] border border-[#D4AF37]/50 text-[#E6C762] text-xs font-bold transition cursor-pointer">
+                📋 Copy Tất Cả Link
+              </button>
+              <button type="button" onclick="exportGuestListCsv()" class="px-3 py-2 rounded-xl bg-[#090F20] border border-[#D4AF37]/40 text-[#CBD5E1] text-xs font-bold hover:border-[#E6C762] transition cursor-pointer">
+                📥 Xuất Excel (.CSV)
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <input id="filter-guest-input" type="text" oninput="renderGuestTable()" placeholder="🔍 Tìm nhanh khách mời trong danh sách..." class="w-full px-3.5 py-2 rounded-xl bg-[#090F20] border border-[#D4AF37]/40 text-xs sm:text-sm text-[#FAF6EE] placeholder-[#94A3B8] focus:outline-none focus:border-[#E6C762]" />
+          </div>
+
+          <div id="guest-list-container" class="space-y-2.5 max-h-[520px] overflow-y-auto pr-1">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+
+      </div>
+
+      <!-- RIGHT 5 COLS: LIVE PERSONALIZED CARD PREVIEW & JPG DOWNLOAD -->
+      <div class="lg:col-span-5 royal-navy-panel rounded-3xl p-5 sm:p-6 sticky top-6 space-y-4">
+        <div class="flex items-center justify-between gap-2">
+          <div>
+            <span class="text-[11px] font-mono-ai text-[#6EE7B7] uppercase block">✨ XEM TRƯỚC THIỆP CÁ NHÂN HÓA</span>
+            <h3 class="font-serif-luxury text-xl font-bold text-[#E6C762]">
+              Thiệp Của: <span id="preview-guest-title" class="text-[#FAF6EE]">[ TÊN KHÁCH MỜI ]</span>
+            </h3>
+          </div>
+          <div class="flex gap-1.5">
+            <button type="button" onclick="previewPoseChange('card1')" id="btn-pose-1" class="px-2.5 py-1 rounded-lg bg-[#D4AF37] text-[#0F172A] text-xs font-bold cursor-pointer">Ảnh 1</button>
+            <button type="button" onclick="previewPoseChange('card2')" id="btn-pose-2" class="px-2.5 py-1 rounded-lg bg-[#090F20] border border-[#D4AF37]/50 text-[#FAF6EE] text-xs font-bold cursor-pointer">Ảnh 2</button>
+          </div>
+        </div>
+
+        <div class="rounded-2xl overflow-hidden border-2 border-[#D4AF37] shadow-2xl bg-[#FAF6EE]">
+          <canvas id="preview-card-canvas" width="896" height="1200" class="w-full h-auto block"></canvas>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2.5">
+          <button type="button" onclick="downloadCurrentCardJpg()" class="py-2.5 px-3 rounded-xl bg-[#D4AF37] hover:bg-[#E0BE4C] text-[#0F172A] font-extrabold text-xs sm:text-sm text-center shadow-md transition cursor-pointer">
+            🖼️ Tải Ảnh Thiệp (.JPG)
+          </button>
+          <button type="button" onclick="copyLiveUrl()" class="py-2.5 px-3 rounded-xl bg-[#1E2F5D] hover:bg-[#283E7A] border border-[#D4AF37]/60 text-[#FAF6EE] font-bold text-xs sm:text-sm text-center transition cursor-pointer">
+            📋 Copy Link Thiệp Này
+          </button>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- TAB 2: HỘP THƯ LỜI CHÚC THẦM KÍN GỬI ZUNZUN                           -->
+    <!-- ===================================================================== -->
+    <section id="tab-wishes" class="hidden space-y-5">
+      <div class="royal-navy-panel rounded-3xl p-5 sm:p-6">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[#D4AF37]/25">
+          <div>
+            <h2 class="font-serif-luxury text-2xl sm:text-3xl font-bold text-[#E6C762]">
+              Đôi Lời Thầm Kín Gửi Zunzun
+            </h2>
+            <p class="text-xs sm:text-sm text-[#CBD5E1] mt-0.5">
+              Toàn bộ lời chúc khách mời gửi từ các link thiệp mời tốt nghiệp (đồng bộ trực tiếp từ Supabase).
+            </p>
+          </div>
+          <div class="flex items-center gap-2 shrink-0">
+            <button type="button" onclick="refreshFromCloud()" class="px-3.5 py-2 rounded-xl bg-[#1E2F5D] border border-[#D4AF37]/50 text-[#FAF6EE] text-xs font-bold cursor-pointer">
+              🔄 Tải lại từ Cloud
+            </button>
+            <button type="button" onclick="exportWishesJson()" class="px-4 py-2 rounded-xl bg-[#D4AF37] text-[#0F172A] font-extrabold text-xs sm:text-sm cursor-pointer">
+              📥 Tải JSON
+            </button>
+          </div>
+        </div>
+
+        <div id="wishes-inbox-list" class="mt-4 space-y-3">
+          <!-- Populated by JS -->
+        </div>
+      </div>
+    </section>
+
+    <!-- ===================================================================== -->
+    <!-- TAB 3: CLOUD SUPABASE & PHOTO DRIVE LINK SETTINGS                     -->
+    <!-- ===================================================================== -->
+    <section id="tab-cloud" class="hidden space-y-6">
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+
+        <!-- Left: Supabase Credentials -->
+        <div class="md:col-span-6 royal-navy-panel rounded-3xl p-5 sm:p-6 space-y-4">
+          <h2 class="font-serif-luxury text-xl sm:text-2xl font-bold text-[#E6C762]">
+            ☁️ Kết Nối Cơ Sở Dữ Liệu Supabase
+          </h2>
+          <p class="text-xs text-[#CBD5E1] leading-relaxed">
+            Bạn có thể điền cố định trong file <code class="text-[#6EE7B7]">assets/config.js</code> trước khi push lên GitHub, hoặc dán trực tiếp tại đây:
+          </p>
+
+          <div class="space-y-3">
+            <div>
+              <label class="block text-xs font-mono-ai text-[#E6C762] mb-1">SUPABASE PROJECT URL:</label>
+              <input id="sb-url-input" type="text" placeholder="https://xxxxxxxxxxxx.supabase.co" class="w-full px-3.5 py-2.5 rounded-xl bg-[#090F20] border border-[#D4AF37]/50 text-xs sm:text-sm text-[#FAF6EE] font-mono-ai focus:outline-none focus:border-[#E6C762]" />
+            </div>
+            <div>
+              <label class="block text-xs font-mono-ai text-[#E6C762] mb-1">SUPABASE ANON PUBLIC KEY:</label>
+              <input id="sb-key-input" type="password" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." class="w-full px-3.5 py-2.5 rounded-xl bg-[#090F20] border border-[#D4AF37]/50 text-xs sm:text-sm text-[#FAF6EE] font-mono-ai focus:outline-none focus:border-[#E6C762]" />
+            </div>
+            <button type="button" onclick="saveSupabaseConfig()" class="w-full py-2.5 px-4 rounded-xl bg-[#D4AF37] hover:bg-[#E0BE4C] text-[#0F172A] font-extrabold text-xs sm:text-sm cursor-pointer">
+              💾 Lưu & Đồng Bộ Supabase Ngay
+            </button>
+          </div>
+        </div>
+
+        <!-- Right: Post-Graduation Google Drive URL & Base Domain -->
+        <div class="md:col-span-6 royal-navy-panel rounded-3xl p-5 sm:p-6 space-y-5">
+          <div>
+            <h2 class="font-serif-luxury text-xl sm:text-2xl font-bold text-[#E6C762]">
+              📸 Cập Nhật Link Google Drive Nhận Ảnh
+            </h2>
+            <p class="text-xs text-[#CBD5E1] mt-1">
+              Sau lễ tốt nghiệp <strong>08.11.2026</strong>, dán link Google Drive chứa ảnh vào đây và bấm Lưu — tất cả khách mời bấm nút nhận ảnh trên thiệp sẽ mở thẳng vào Drive này!
+            </p>
+            <div class="mt-3 flex flex-col sm:flex-row gap-2">
+              <input id="photo-drive-url-input" type="text" placeholder="https://drive.google.com/drive/folders/..." class="flex-1 px-3.5 py-2.5 rounded-xl bg-[#090F20] border border-[#D4AF37]/50 text-xs sm:text-sm text-[#FAF6EE] focus:outline-none focus:border-[#E6C762]" />
+              <button type="button" onclick="savePhotoDriveConfig()" class="px-4 py-2.5 rounded-xl bg-[#10B981] hover:bg-[#059669] text-[#090F20] font-extrabold text-xs sm:text-sm shrink-0 cursor-pointer">
+                Lưu Link Ảnh
+              </button>
+            </div>
+          </div>
+
+          <div class="pt-4 border-t border-[#D4AF37]/25">
+            <h3 class="font-serif-luxury text-lg font-bold text-[#E6C762]">
+              🌐 Đường Dẫn Gốc Của Thiệp (Domain Vercel)
+            </h3>
+            <p class="text-xs text-[#CBD5E1] mt-1">
+              Tự động nhận diện tên miền hiện tại khi deploy lên Vercel (hoặc tùy chỉnh tại đây):
+            </p>
+            <div class="mt-2.5 flex flex-col sm:flex-row gap-2">
+              <input id="base-url-input" type="text" oninput="saveBaseUrl(this.value)" class="flex-1 px-3.5 py-2 rounded-xl bg-[#090F20] border border-[#D4AF37]/50 text-[#FAF6EE] font-mono-ai text-xs focus:outline-none" />
+              <button type="button" onclick="resetBaseUrl()" class="px-3.5 py-2 rounded-xl bg-[#1E2F5D] text-[#FAF6EE] text-xs font-bold shrink-0 cursor-pointer">
+                Tự động
+              </button>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    const CARD_ASSETS = { card1: "./assets/card1.webp", card2: "./assets/card2.webp" };
+    const CARD_IMAGES = {};
+    let currentPreviewPose = 'card1';
+    let currentPreviewName = '[ TÊN KHÁCH MỜI ]';
+    let guestsCache = [];
+    let wishesCache = [];
+
+    function detectDefaultInvitationUrl() {
+      const saved = localStorage.getItem(window.ZunzunDB.STORAGE_KEYS.BASE_URL);
+      if (saved && saved.trim()) return saved.trim();
+      const origin = window.location.origin;
+      const path = window.location.pathname;
+      if (origin && origin !== 'null' && !origin.startsWith('file:')) {
+        const cleanDir = path.replace(/\/(quan-ly-thiep\.html|quan-ly|admin|quan_ly_thiep_zunzun\.html)$/, '');
+        return `${origin}${cleanDir}/`;
+      }
+      const loc = window.location.href.split('?')[0].split('#')[0];
+      return loc
+        .replace('quan_ly_thiep_zunzun.html', 'thiep_moi_tot_nghiep_web.html')
+        .replace('quan-ly-thiep.html', 'index.html');
+    }
+
+    function buildGuestUrl(name, pose) {
+      const base = document.getElementById('base-url-input')?.value.trim() || detectDefaultInvitationUrl();
+      const cleanName = (name && name.trim()) ? name.trim() : '[ TÊN KHÁCH MỜI ]';
+      const sep = base.includes('?') ? '&' : '?';
+      const poseQuery = (pose === 'card2') ? '&pose=card2' : '';
+      return `${base}${sep}to=${encodeURIComponent(cleanName)}${poseQuery}`;
+    }
+
+    async function initManager() {
+      document.getElementById('base-url-input').value = detectDefaultInvitationUrl();
+
+      const creds = window.ZunzunDB.getCredentials();
+      document.getElementById('sb-url-input').value = creds.url;
+      document.getElementById('sb-key-input').value = creds.key;
+      updateSupabaseBadge();
+
+      let loaded = 0;
+      ['card1', 'card2'].forEach(k => {
+        const img = new Image();
+        img.onload = () => {
+          CARD_IMAGES[k] = img;
+          loaded++;
+          if (loaded === 2) renderPreviewCanvas();
+        };
+        img.src = CARD_ASSETS[k];
+      });
+
+      updateLiveLinkBar();
+      await refreshFromCloud();
+    }
+
+    function updateSupabaseBadge() {
+      const badge = document.getElementById('sb-status-badge');
+      const { isConfigured } = window.ZunzunDB.getCredentials();
+      if (isConfigured) {
+        badge.className = 'inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#10B981]/20 border border-[#10B981] text-[#6EE7B7] font-mono-ai text-xs font-bold';
+        badge.textContent = '🟢 Đã kết nối Supabase Cloud';
+      } else {
+        badge.className = 'inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-500/15 border border-amber-400/50 text-amber-300 font-mono-ai text-xs font-bold';
+        badge.textContent = '🟡 Lưu tại trình duyệt (Chưa gắn Supabase)';
+      }
+    }
+
+    async function refreshFromCloud() {
+      guestsCache = await window.ZunzunDB.fetchGuests();
+      wishesCache = await window.ZunzunDB.fetchWishes();
+      const driveUrl = await window.ZunzunDB.getPhotoDriveUrl();
+      const driveInput = document.getElementById('photo-drive-url-input');
+      if (driveInput) driveInput.value = driveUrl;
+
+      renderGuestTable();
+      renderWishesInbox();
+    }
+
+    async function saveSupabaseConfig() {
+      const url = document.getElementById('sb-url-input').value;
+      const key = document.getElementById('sb-key-input').value;
+      window.ZunzunDB.saveCredentials(url, key);
+      updateSupabaseBadge();
+      await refreshFromCloud();
+      showToast('☁️ Đã lưu cấu hình Supabase và đồng bộ dữ liệu!');
+    }
+
+    async function savePhotoDriveConfig() {
+      const val = document.getElementById('photo-drive-url-input').value;
+      await window.ZunzunDB.setPhotoDriveUrl(val);
+      showToast('📸 Đã cập nhật Link Google Drive Nhận Ảnh cho toàn bộ thiệp!');
+    }
+
+    function switchTab(tab) {
+      ['cards', 'wishes', 'cloud'].forEach(t => {
+        document.getElementById('tab-' + t).classList.toggle('hidden', t !== tab);
+        document.getElementById('tab-btn-' + t).className = (t === tab)
+          ? 'px-4 py-2.5 rounded-xl bg-[#D4AF37] text-[#0F172A] font-extrabold text-xs sm:text-sm transition cursor-pointer'
+          : 'px-4 py-2.5 rounded-xl bg-[#1E2F5D] border border-[#D4AF37]/50 text-[#FAF6EE] font-bold text-xs sm:text-sm hover:border-[#E6C762] transition cursor-pointer';
+      });
+      if (tab === 'wishes') refreshFromCloud();
+    }
+
+    function saveBaseUrl(val) {
+      localStorage.setItem(window.ZunzunDB.STORAGE_KEYS.BASE_URL, val.trim());
+      updateLiveLinkBar();
+      renderGuestTable();
+    }
+
+    function resetBaseUrl() {
+      localStorage.removeItem(window.ZunzunDB.STORAGE_KEYS.BASE_URL);
+      document.getElementById('base-url-input').value = detectDefaultInvitationUrl();
+      updateLiveLinkBar();
+      renderGuestTable();
+    }
+
+    function previewGuestCard(val) {
+      currentPreviewName = (val && val.trim()) ? val.trim() : '[ TÊN KHÁCH MỜI ]';
+      document.getElementById('preview-guest-title').textContent = currentPreviewName;
+      updateLiveLinkBar();
+      renderPreviewCanvas();
+    }
+
+    function previewPoseChange(pose) {
+      currentPreviewPose = (pose === 'card2') ? 'card2' : 'card1';
+      document.getElementById('guest-pose-select').value = currentPreviewPose;
+      document.getElementById('btn-pose-1').className = currentPreviewPose === 'card1'
+        ? 'px-2.5 py-1 rounded-lg bg-[#D4AF37] text-[#0F172A] text-xs font-bold cursor-pointer'
+        : 'px-2.5 py-1 rounded-lg bg-[#090F20] border border-[#D4AF37]/50 text-[#FAF6EE] text-xs font-bold cursor-pointer';
+      document.getElementById('btn-pose-2').className = currentPreviewPose === 'card2'
+        ? 'px-2.5 py-1 rounded-lg bg-[#D4AF37] text-[#0F172A] text-xs font-bold cursor-pointer'
+        : 'px-2.5 py-1 rounded-lg bg-[#090F20] border border-[#D4AF37]/50 text-[#FAF6EE] text-xs font-bold cursor-pointer';
+      updateLiveLinkBar();
+      renderPreviewCanvas();
+    }
+
+    function updateLiveLinkBar() {
+      const url = buildGuestUrl(currentPreviewName, currentPreviewPose);
+      const inputEl = document.getElementById('live-generated-url');
+      const openEl = document.getElementById('live-open-url');
+      if (inputEl) inputEl.value = url;
+      if (openEl) openEl.href = url;
+    }
+
+    function renderPreviewCanvas() {
+      const canvas = document.getElementById('preview-card-canvas');
+      const baseImg = CARD_IMAGES[currentPreviewPose] || CARD_IMAGES.card1;
+      if (!canvas || !baseImg) return;
+
+      const ctx = canvas.getContext('2d');
+      canvas.width = baseImg.width;
+      canvas.height = baseImg.height;
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.drawImage(baseImg, 0, 0);
+
+      const cx = canvas.width / 2;
+      ctx.fillStyle = '#FAF6EE';
+      ctx.fillRect(cx - 230, 766, 460, 34);
+      ctx.font = 'bold 21px "Plus Jakarta Sans", "Segoe UI", sans-serif';
+      ctx.fillStyle = '#141E3C';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('TRÂN TRỌNG KÍNH MỜI BẠN', cx, 784);
+
+      const boxW = 540, boxH = 56, boxX = cx - boxW / 2, boxY = 806;
+      ctx.save();
+      ctx.fillStyle = '#FAF6EE';
+      ctx.fillRect(boxX - 8, boxY - 3, boxW + 16, boxH + 6);
+
+      ctx.strokeStyle = '#C59B27';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(boxX + 10, boxY + 2, boxW - 20, boxH - 4);
+
+      ctx.fillStyle = 'rgba(253, 249, 240, 0.96)';
+      ctx.fillRect(boxX + 12, boxY + 4, boxW - 24, boxH - 8);
+
+      let fontSize = 27;
+      if (currentPreviewName.length > 22) fontSize = 22;
+      if (currentPreviewName.length > 30) fontSize = 18;
+      ctx.font = `bold ${fontSize}px "Cormorant Garamond", Georgia, serif`;
+      ctx.fillStyle = '#141E3C';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(currentPreviewName, cx, boxY + boxH / 2 + 1);
+      ctx.restore();
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById('manager-toast');
+      if (!t) return;
+      t.textContent = msg;
+      t.classList.remove('hidden');
+      clearTimeout(window._toastTimer);
+      window._toastTimer = setTimeout(() => t.classList.add('hidden'), 3500);
+    }
+
+    async function addSingleGuest() {
+      const input = document.getElementById('guest-name-input');
+      const pose = document.getElementById('guest-pose-select').value;
+      const name = (input?.value || '').trim();
+      if (!name) {
+        input?.focus();
+        return;
+      }
+
+      const newGuest = {
+        id: 'g_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6),
+        name: name,
+        pose: pose,
+        sent: false
+      };
+
+      guestsCache = await window.ZunzunDB.addGuests([newGuest]);
+      input.value = '';
+      previewGuestCard(name);
+      renderGuestTable();
+
+      const url = buildGuestUrl(name, pose);
+      navigator.clipboard?.writeText(url).catch(() => {});
+      showToast(`✅ Đã tạo thiệp cho "${name}" và tự động Copy Link!`);
+    }
+
+    function toggleBulkMode() {
+      document.getElementById('bulk-input-box')?.classList.toggle('hidden');
+    }
+
+    async function addBulkGuests() {
+      const area = document.getElementById('bulk-names-textarea');
+      const pose = document.getElementById('guest-pose-select').value;
+      const raw = (area?.value || '').trim();
+      if (!raw) return;
+
+      const lines = raw.split(/\r?\n/).map(s => s.trim()).filter(Boolean);
+      if (lines.length === 0) return;
+
+      const batch = lines.map((name, idx) => ({
+        id: 'g_' + Date.now() + '_' + idx,
+        name: name,
+        pose: pose,
+        sent: false
+      }));
+
+      guestsCache = await window.ZunzunDB.addGuests(batch);
+      area.value = '';
+      document.getElementById('bulk-input-box').classList.add('hidden');
+      renderGuestTable();
+      showToast(`🎉 Đã tạo thành công ${lines.length} link thiệp mời!`);
+    }
+
+    async function toggleSentStatus(id) {
+      const found = guestsCache.find(g => g.id === id);
+      if (!found) return;
+      const nextSent = !found.sent;
+      found.sent = nextSent;
+      renderGuestTable();
+      await window.ZunzunDB.updateGuest(id, { sent: nextSent });
+    }
+
+    async function changeGuestPose(id, newPose) {
+      const found = guestsCache.find(g => g.id === id);
+      if (!found) return;
+      found.pose = newPose;
+      currentPreviewName = found.name;
+      previewPoseChange(newPose);
+      renderGuestTable();
+      await window.ZunzunDB.updateGuest(id, { pose: newPose });
+    }
+
+    async function deleteGuest(id) {
+      guestsCache = guestsCache.filter(g => g.id !== id);
+      renderGuestTable();
+      await window.ZunzunDB.deleteGuest(id);
+    }
+
+    function selectGuestForPreview(name, pose) {
+      currentPreviewName = name;
+      document.getElementById('preview-guest-title').textContent = name;
+      previewPoseChange(pose || 'card1');
+    }
+
+    function copyText(txt, label) {
+      navigator.clipboard?.writeText(txt).then(() => {
+        showToast(label || '📋 Đã sao chép vào bộ nhớ tạm!');
+      }).catch(() => {
+        const ta = document.createElement('textarea');
+        ta.value = txt;
+        document.body.appendChild(ta);
+        ta.select();
+        document.execCommand('copy');
+        ta.remove();
+        showToast(label || '📋 Đã sao chép!');
+      });
+    }
+
+    function copyLiveUrl() {
+      const url = buildGuestUrl(currentPreviewName, currentPreviewPose);
+      copyText(url, `📋 Đã copy link thiệp của "${currentPreviewName}"!`);
+    }
+
+    function copyInviteMessage(name, pose) {
+      const url = buildGuestUrl(name, pose);
+      const msg = `Trân trọng thân mời ${name} đến chung vui tại Lễ Tốt Nghiệp của Hà Minh Dũng (Zunzun) vào lúc 09:30 - 12:00 Chủ Nhật ngày 08.11.2026 tại Sảnh Trống Đồng - ĐH FPT TP.HCM!\n👉 Mở thiệp mời dành riêng cho ${name} tại đây nhé: ${url}`;
+      copyText(msg, `💬 Đã copy lời mời + link của "${name}"!`);
+    }
+
+    function copyAllGuestLinks() {
+      if (guestsCache.length === 0) {
+        showToast('⚠️ Chưa có khách mời nào trong danh sách!');
+        return;
+      }
+      const lines = guestsCache.map((g, i) => `${i + 1}. ${g.name}: ${buildGuestUrl(g.name, g.pose)}`);
+      copyText(lines.join('\n'), `📋 Đã copy toàn bộ ${guestsCache.length} link thiệp mời!`);
+    }
+
+    function exportGuestListCsv() {
+      if (guestsCache.length === 0) {
+        showToast('⚠️ Chưa có khách mời nào để xuất file!');
+        return;
+      }
+      const rows = [['STT', 'Tên Khách Mời', 'Kiểu Ảnh', 'Trạng Thái', 'Link Thiệp Cá Nhân']];
+      guestsCache.forEach((g, idx) => {
+        rows.push([
+          String(idx + 1),
+          `"${String(g.name).replace(/"/g, '""')}"`,
+          g.pose === 'card2' ? 'Ảnh 2 (Cầm Bằng)' : 'Ảnh 1 (Đeo Sash)',
+          g.sent ? 'Đã gửi' : 'Chưa gửi',
+          `"${buildGuestUrl(g.name, g.pose)}"`
+        ]);
+      });
+      const csvContent = '\uFEFF' + rows.map(r => r.join(',')).join('\r\n');
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'danh_sach_link_thiep_ha_minh_dung.csv';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function downloadCurrentCardJpg() {
+      const canvas = document.getElementById('preview-card-canvas');
+      if (!canvas) return;
+      const slug = currentPreviewName
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        .replace(/đ/g, 'd').replace(/Đ/g, 'D')
+        .replace(/[^a-zA-Z0-9]+/g, '_').replace(/^_|_$/g, '') || 'Khach_Moi';
+      const link = document.createElement('a');
+      link.download = `Thiep_Tot_Nghiep_HaMinhDung_${slug}.jpg`;
+      link.href = canvas.toDataURL('image/jpeg', 0.95);
+      link.click();
+    }
+
+    function downloadSpecificGuestJpg(name, pose) {
+      selectGuestForPreview(name, pose);
+      setTimeout(downloadCurrentCardJpg, 60);
+    }
+
+    function escapeHtml(str) {
+      return String(str || '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function renderGuestTable() {
+      const container = document.getElementById('guest-list-container');
+      const q = (document.getElementById('filter-guest-input')?.value || '').trim().toLowerCase();
+
+      document.getElementById('guest-total-badge').textContent = String(guestsCache.length);
+      document.getElementById('list-count-txt').textContent = String(guestsCache.length);
+
+      const filtered = q ? guestsCache.filter(g => g.name.toLowerCase().includes(q)) : guestsCache;
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="rounded-2xl p-8 bg-[#090F20]/80 border border-[#D4AF37]/25 text-center">
+            <p class="text-sm font-bold text-[#E6C762]">Chưa có khách mời nào trong danh sách</p>
+            <p class="text-xs text-[#94A3B8] mt-1">Hãy nhập tên khách mời ở ô bên trên và bấm "+ Tạo Link" để bắt đầu nhé!</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = filtered.map((g, idx) => {
+        const url = buildGuestUrl(g.name, g.pose);
+        const safeName = escapeHtml(g.name);
+        return `
+          <div class="rounded-2xl p-3.5 bg-[#090F20]/90 border ${g.sent ? 'border-[#10B981]/60' : 'border-[#D4AF37]/40'} hover:border-[#E6C762] transition space-y-2.5">
+            <div class="flex items-center justify-between gap-2 flex-wrap">
+              <div class="flex items-center gap-2 min-w-0 cursor-pointer" onclick="selectGuestForPreview('${safeName}', '${g.pose}')">
+                <span class="px-2 py-0.5 rounded-md bg-[#1E2F5D] text-[#E6C762] font-mono-ai text-xs font-bold">
+                  #${idx + 1}
+                </span>
+                <span class="text-sm sm:text-base font-bold text-[#FAF6EE] truncate hover:text-[#E6C762]">
+                  ${safeName}
+                </span>
+              </div>
+
+              <div class="flex items-center gap-1.5 shrink-0">
+                <select onchange="changeGuestPose('${g.id}', this.value)" class="px-2 py-1 rounded-lg bg-[#162244] border border-[#D4AF37]/40 text-[#E6C762] text-[11px] font-bold">
+                  <option value="card1" ${g.pose === 'card1' ? 'selected' : ''}>Ảnh 1: Sash</option>
+                  <option value="card2" ${g.pose === 'card2' ? 'selected' : ''}>Ảnh 2: Bằng</option>
+                </select>
+
+                <button type="button" onclick="toggleSentStatus('${g.id}')" class="px-2.5 py-1 rounded-lg text-[11px] font-bold border transition cursor-pointer ${g.sent ? 'bg-[#10B981]/20 border-[#10B981] text-[#6EE7B7]' : 'bg-[#162244] border-slate-600 text-slate-300'}">
+                  ${g.sent ? '✅ Đã gửi' : '⏳ Chưa gửi'}
+                </button>
+
+                <button type="button" onclick="deleteGuest('${g.id}')" class="px-2 py-1 rounded-lg bg-rose-950/60 hover:bg-rose-900 border border-rose-500/40 text-rose-300 text-[11px] cursor-pointer" title="Xóa">
+                  ✕
+                </button>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-2 bg-[#050914] px-3 py-1.5 rounded-xl border border-[#D4AF37]/25">
+              <input type="text" readonly value="${escapeHtml(url)}" class="flex-1 bg-transparent text-[#6EE7B7] font-mono-ai text-xs focus:outline-none truncate" />
+            </div>
+
+            <div class="flex items-center gap-1.5 flex-wrap pt-0.5">
+              <button type="button" onclick="copyText('${escapeHtml(url)}', '📋 Đã copy link thiệp của ${safeName}!')" class="px-3 py-1.5 rounded-lg bg-[#D4AF37] hover:bg-[#E0BE4C] text-[#0F172A] text-xs font-extrabold transition cursor-pointer">
+                📋 Copy Link
+              </button>
+              <button type="button" onclick="copyInviteMessage('${safeName}', '${g.pose}')" class="px-3 py-1.5 rounded-lg bg-[#1E2F5D] hover:bg-[#283E7A] border border-[#D4AF37]/40 text-[#FAF6EE] text-xs font-bold transition cursor-pointer">
+                💬 Copy Lời Mời + Link
+              </button>
+              <button type="button" onclick="downloadSpecificGuestJpg('${safeName}', '${g.pose}')" class="px-3 py-1.5 rounded-lg bg-[#162244] hover:bg-[#1E2F5D] border border-[#D4AF37]/40 text-[#E6C762] text-xs font-bold transition cursor-pointer">
+                🖼️ Tải Ảnh (.JPG)
+              </button>
+              <a href="${escapeHtml(url)}" target="_blank" class="px-3 py-1.5 rounded-lg bg-[#10B981]/15 hover:bg-[#10B981]/25 border border-[#10B981]/50 text-[#6EE7B7] text-xs font-bold transition">
+                👁️ Mở Thiệp
+              </a>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderWishesInbox() {
+      const container = document.getElementById('wishes-inbox-list');
+      const badge = document.getElementById('wish-total-badge');
+      if (badge) badge.textContent = String(wishesCache.length);
+      if (!container) return;
+
+      if (wishesCache.length === 0) {
+        container.innerHTML = `
+          <div class="rounded-2xl p-8 bg-[#090F20]/80 border border-[#D4AF37]/25 text-center">
+            <p class="text-sm font-bold text-[#E6C762]">Chưa có lời chúc nào được gửi</p>
+            <p class="text-xs text-[#94A3B8] mt-1">Khi khách mời bấm "Gửi" ở mục Đôi lời thầm kín gửi Zunzun trên thiệp, lời chúc sẽ hiển thị tại đây.</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = wishesCache.map(item => `
+        <div class="rounded-2xl p-4 bg-[#090F20]/90 border border-[#D4AF37]/40 space-y-2">
+          <div class="flex items-center justify-between gap-2 border-b border-[#D4AF37]/20 pb-2">
+            <span class="text-sm font-bold text-[#E6C762]">👤 ${escapeHtml(item.guest || 'Khách mời')}</span>
+            <span class="text-xs font-mono-ai text-[#6EE7B7]">🕒 ${escapeHtml(item.time || '')}</span>
+          </div>
+          <p class="text-sm text-[#FAF6EE] leading-relaxed whitespace-pre-line">${escapeHtml(item.msg)}</p>
+        </div>
+      `).join('');
+    }
+
+    function exportWishesJson() {
+      const blob = new Blob([JSON.stringify(wishesCache, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'loi_chuc_gui_zunzun_2026.json';
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    window.addEventListener('DOMContentLoaded', initManager);
+  </script>
+</body>
+</html>

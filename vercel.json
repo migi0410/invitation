@@ -1,0 +1,9 @@
+{
+  "cleanUrls": true,
+  "trailingSlash": false,
+  "rewrites": [
+    { "source": "/quan-ly", "destination": "/quan-ly-thiep.html" },
+    { "source": "/admin", "destination": "/quan-ly-thiep.html" },
+    { "source": "/loi-chuc", "destination": "/loi-chuc-zunzun.html" }
+  ]
+}

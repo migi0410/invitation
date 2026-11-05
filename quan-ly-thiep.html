@@ -6,20 +6,24 @@
   <title>Quản Lý & Tạo Thiệp Tốt Nghiệp — Hà Minh Dũng (Zunzun)</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="./assets/config.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Lora:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet" />
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap');
-
     body {
-      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-family: 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       background-color: #0B1021;
       color: #FAF6EE;
       min-height: 100vh;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
     }
     .font-serif-luxury {
-      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-family: 'Lora', 'Be Vietnam Pro', Georgia, serif;
+      line-height: 1.35;
     }
     .font-mono-ai {
-      font-family: 'JetBrains Mono', monospace;
+      font-family: 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     }
     .royal-navy-panel {
       background: linear-gradient(160deg, #162244 0%, #0E162E 65%, #090F20 100%);
@@ -95,7 +99,7 @@
                 placeholder="Nhập tên khách mời (VD: Bạn Minh Anh, Anh Tuấn...)"
                 oninput="previewGuestCard(this.value)"
                 onkeydown="if(event.key==='Enter'){ event.preventDefault(); addSingleGuest(); }"
-                class="flex-1 px-4 py-3 rounded-xl bg-[#090F20] border border-[#D4AF37]/60 text-[#FAF6EE] placeholder-[#94A3B8] text-sm sm:text-base font-bold focus:outline-none focus:border-[#E6C762]"
+                class="flex-1 px-4 py-3 rounded-xl bg-[#090F20] border border-[#D4AF37]/60 text-[#FAF6EE] placeholder-[#94A3B8] text-base font-bold focus:outline-none focus:border-[#E6C762]"
               />
               <select id="guest-pose-select" onchange="previewPoseChange(this.value)" class="px-3.5 py-3 rounded-xl bg-[#090F20] border border-[#D4AF37]/60 text-[#E6C762] text-xs sm:text-sm font-bold focus:outline-none">
                 <option value="card1">Ảnh 1: Đeo Sash</option>
@@ -128,7 +132,7 @@
             <label class="block text-xs text-[#CBD5E1]">
               Dán danh sách khách mời (<strong class="text-[#E6C762]">mỗi dòng 1 tên</strong>) để tạo hàng loạt link cùng lúc:
             </label>
-            <textarea id="bulk-names-textarea" rows="5" placeholder="Nguyễn Văn A&#10;Trần Thị B&#10;Anh Hoàng&#10;Chị Lan..." class="w-full px-3.5 py-2.5 rounded-xl bg-[#090F20] border border-[#D4AF37]/60 text-[#FAF6EE] placeholder-[#94A3B8] text-sm focus:outline-none focus:border-[#E6C762]"></textarea>
+            <textarea id="bulk-names-textarea" rows="5" placeholder="Nguyễn Văn A&#10;Trần Thị B&#10;Anh Hoàng&#10;Chị Lan..." class="w-full px-3.5 py-2.5 rounded-xl bg-[#090F20] border border-[#D4AF37]/60 text-[#FAF6EE] placeholder-[#94A3B8] text-base sm:text-sm focus:outline-none focus:border-[#E6C762]"></textarea>
             <div class="flex justify-end gap-2">
               <button type="button" onclick="toggleBulkMode()" class="px-4 py-2 rounded-xl bg-[#1E2F5D] text-xs font-bold text-[#CBD5E1] cursor-pointer">
                 Đóng
@@ -304,7 +308,12 @@
   </main>
 
   <script>
-    const CARD_ASSETS = { card1: "./assets/card1.webp", card2: "./assets/card2.webp" };
+    const CARD_ASSETS = {
+      card1: "./assets/card1.webp",
+      card2: "./assets/card2.webp",
+      card1_base: "./assets/card1_base.webp",
+      card2_base: "./assets/card2_base.webp"
+    };
     const CARD_IMAGES = {};
     let currentPreviewPose = 'card1';
     let currentPreviewName = '';
@@ -350,15 +359,19 @@
       updateSupabaseBadge();
 
       let loaded = 0;
-      ['card1', 'card2'].forEach(k => {
+      ['card1', 'card2', 'card1_base', 'card2_base'].forEach(k => {
+        if (!CARD_ASSETS[k]) return;
         const img = new Image();
         img.onload = () => {
           CARD_IMAGES[k] = img;
           loaded++;
-          if (loaded === 2) renderPreviewCanvas();
+          if (loaded >= 2) renderPreviewCanvas();
         };
         img.src = CARD_ASSETS[k];
       });
+      if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(() => renderPreviewCanvas());
+      }
 
       updateLiveLinkBar();
       await refreshFromCloud();
@@ -461,7 +474,10 @@
 
     function renderPreviewCanvas() {
       const canvas = document.getElementById('preview-card-canvas');
-      const baseImg = CARD_IMAGES[currentPreviewPose] || CARD_IMAGES.card1;
+      const hasName = Boolean(currentPreviewName && currentPreviewName.trim() && currentPreviewName !== '[ TÊN KHÁCH MỜI ]');
+      const baseImg = hasName
+        ? (CARD_IMAGES[currentPreviewPose + '_base'] || CARD_IMAGES[currentPreviewPose] || CARD_IMAGES.card1)
+        : (CARD_IMAGES[currentPreviewPose] || CARD_IMAGES.card1);
       if (!canvas || !baseImg) return;
 
       const ctx = canvas.getContext('2d');
@@ -470,7 +486,6 @@
       ctx.clearRect(0, 0, canvas.width, canvas.height);
       ctx.drawImage(baseImg, 0, 0);
 
-      const hasName = Boolean(currentPreviewName && currentPreviewName.trim() && currentPreviewName !== '[ TÊN KHÁCH MỜI ]');
       if (!hasName) return;
 
       const cx = canvas.width / 2;
@@ -506,14 +521,14 @@
 
       ctx.textAlign = 'center';
       ctx.fillStyle = '#8A640F';
-      ctx.font = 'bold 12.5px "Segoe UI", Arial, sans-serif';
+      ctx.font = '700 12.5px "Be Vietnam Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif';
       ctx.fillText('TRÂN TRỌNG KÍNH MỜI BẠN', cx, boxY + 19);
 
       let fSize = 25;
       if (nameStr.length > 28) fSize = 20;
       else if (nameStr.length > 22) fSize = 22;
       ctx.fillStyle = '#141E3C';
-      ctx.font = `bold ${fSize}px "Palatino Linotype", Georgia, "Times New Roman", serif`;
+      ctx.font = `700 ${fSize}px "Lora", "Be Vietnam Pro", Georgia, serif`;
       ctx.fillText(nameStr, cx, boxY + 48);
       ctx.restore();
     }
@@ -726,7 +741,7 @@
                 <span class="px-2 py-0.5 rounded-md bg-[#1E2F5D] text-[#E6C762] font-mono-ai text-xs font-bold">
                   #${idx + 1}
                 </span>
-                <span class="text-sm sm:text-base font-bold text-[#FAF6EE] truncate hover:text-[#E6C762]">
+                <span class="text-base font-bold text-[#FAF6EE] truncate hover:text-[#E6C762]">
                   ${safeName}
                 </span>
               </div>

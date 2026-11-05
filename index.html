@@ -4,6 +4,9 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Thiệp Mời Tốt Nghiệp — Hà Minh Dũng | 09:30 - 12:00 · 08.11.2026 · FPTU</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400&family=Lora:ital,wght@0,600;0,700;1,600&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" />
   <script src="https://cdn.tailwindcss.com"></script>
   <script src="./assets/config.js"></script>
   <style>
@@ -37,12 +40,22 @@
       50% { box-shadow: 0 0 0 12px rgba(16, 185, 129, 0), 0 0 45px rgba(212, 175, 55, 0.65); }
     }
 
-    body {
+    *, *::before, *::after {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+    html, body {
       margin: 0;
+      padding: 0;
+      width: 100%;
+      overflow-x: hidden;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+    body {
       background-color: #0B0F19;
       color: #FAF6EE;
-      font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, Roboto, Helvetica, Arial, sans-serif;
-      overflow-x: hidden;
+      font-family: 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
       transition: background-color 1.1s cubic-bezier(0.4, 0, 0.2, 1), color 1s ease;
     }
     body.theme-ivory {
@@ -51,18 +64,27 @@
     }
 
     .font-serif-luxury {
-      font-family: 'Palatino Linotype', 'Book Antiqua', Georgia, 'Times New Roman', serif;
+      font-family: 'Lora', 'Be Vietnam Pro', Georgia, 'Times New Roman', serif;
+      line-height: 1.35;
     }
     .font-mono-ai {
-      font-family: 'Cascadia Code', 'Fira Code', Consolas, 'Courier New', monospace;
+      font-family: 'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    }
+    .font-code-en {
+      font-family: 'JetBrains Mono', Consolas, monospace;
     }
 
     .gold-foil-text {
       background: linear-gradient(135deg, #BF953F 0%, #FCF6BA 28%, #B38728 52%, #FBF5B7 76%, #AA771C 100%);
       background-size: 200% auto;
       -webkit-background-clip: text;
+      background-clip: text;
       -webkit-text-fill-color: transparent;
       animation: shimmerGold 5s linear infinite;
+      padding-top: 0.12em;
+      padding-bottom: 0.12em;
+      line-height: 1.38;
+      display: inline-block;
     }
     .gold-foil-surface {
       background: linear-gradient(135deg, #AA771C 0%, #D4AF37 25%, #FCF6BA 50%, #C59B27 75%, #8A640F 100%);
@@ -125,7 +147,7 @@
     }
   </style>
 </head>
-<body class="min-h-screen select-none">
+<body class="min-h-screen">
 
   <!-- SUBTLE AMBIENT BACKGROUND CANVAS -->
   <canvas id="neural-canvas" class="fixed inset-0 w-full h-full pointer-events-none z-0"></canvas>
@@ -133,111 +155,106 @@
   <!-- ========================================================================= -->
   <!-- ACT 1: AI MODEL TRAINING CONSOLE (PYTORCH / CUDA TERMINAL THEME)          -->
   <!-- ========================================================================= -->
-  <section id="act1-intro" class="fixed inset-0 z-30 flex items-center justify-center p-3 sm:p-6 transition-opacity duration-900 overflow-y-auto">
+  <section id="act1-intro" class="fixed inset-0 z-30 flex items-center justify-center p-2.5 sm:p-6 transition-opacity duration-900 overflow-y-auto">
 
-    <div class="w-full max-w-3xl rounded-2xl bg-[#0D1117]/95 backdrop-blur-xl border border-[#30363D] shadow-[0_25px_80px_rgba(0,0,0,0.85)] overflow-hidden font-mono-ai text-xs sm:text-sm my-auto">
+    <div class="w-full max-w-3xl rounded-2xl bg-[#0D1117]/95 backdrop-blur-xl border border-[#30363D] shadow-[0_25px_80px_rgba(0,0,0,0.85)] overflow-hidden text-xs sm:text-sm my-auto">
 
       <!-- Terminal Title Bar -->
-      <div class="px-4 py-2.5 bg-[#161B22] border-b border-[#30363D] flex items-center justify-between gap-2">
-        <div class="flex items-center gap-2">
-          <span class="w-3 h-3 rounded-full bg-[#FF5F56] inline-block"></span>
-          <span class="w-3 h-3 rounded-full bg-[#FFBD2E] inline-block"></span>
-          <span class="w-3 h-3 rounded-full bg-[#27C93F] inline-block"></span>
-          <span class="ml-2 text-xs text-[#8B949E] truncate">
-            haminhdung@fptu-ai-k18: ~/graduation-2026 (CUDA 12.4 · PyTorch 2.5)
+      <div class="px-3.5 sm:px-4 py-2 bg-[#161B22] border-b border-[#30363D] flex items-center justify-between gap-2">
+        <div class="flex items-center gap-1.5 min-w-0">
+          <span class="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-[#FF5F56] inline-block shrink-0"></span>
+          <span class="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-[#FFBD2E] inline-block shrink-0"></span>
+          <span class="w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full bg-[#27C93F] inline-block shrink-0"></span>
+          <span class="ml-1.5 text-[11px] sm:text-xs text-[#8B949E] truncate font-code-en">
+            haminhdung@fptu-ai-k18: ~/graduation-2026
           </span>
         </div>
-        <span class="px-2 py-0.5 rounded bg-emerald-500/15 border border-emerald-500/40 text-emerald-400 text-xs font-bold">
+        <span class="px-2 py-0.5 rounded bg-emerald-500/15 border border-emerald-500/40 text-emerald-400 text-[10px] sm:text-xs font-bold shrink-0 font-code-en">
           GPU: ACTIVE
         </span>
       </div>
 
       <!-- Terminal Body -->
-      <div class="p-4 sm:p-6 space-y-4 text-[#C9D1D9]">
+      <div class="p-3 sm:p-6 space-y-3 sm:space-y-4 text-[#C9D1D9]">
 
         <!-- Command Line Input -->
         <div class="space-y-1">
-          <div class="flex flex-wrap items-center gap-1.5 text-xs sm:text-sm">
-            <span class="text-emerald-400 font-bold">haminhdung@fptu-ai-k18</span>
-            <span class="text-[#8B949E]">:</span>
-            <span class="text-sky-400 font-bold">~/k18-ai</span>
-            <span class="text-[#8B949E]">$</span>
-            <span class="text-[#FBF5B7] font-semibold">python train_graduation.py --graduate "Hà Minh Dũng" --epochs 4</span>
+          <div class="flex flex-wrap items-center gap-1 text-[11px] sm:text-sm">
+            <span class="text-emerald-400 font-bold font-code-en">haminhdung@fptu-ai-k18</span>
+            <span class="text-[#8B949E] hidden sm:inline">:~/k18-ai$</span>
+            <span class="text-[#FBF5B7] font-semibold">python train_graduation.py --graduate "Hà Minh Dũng"</span>
           </div>
-          <div class="text-xs text-[#8B949E]">
+          <div class="text-[11px] sm:text-xs text-[#8B949E] hidden sm:block">
             [INFO] Initializing Model: <strong class="text-white">Bachelor_of_AI_K18_FPTU</strong> | Optimizer: AdamW | Precision: bf16
           </div>
         </div>
 
         <!-- 4 Epochs Training Bars (2022 -> 2026) + Live Loss/Acc Chart -->
-        <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-center bg-[#161B22]/90 p-3.5 sm:p-4 rounded-xl border border-[#30363D]">
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-3 sm:gap-4 items-center bg-[#161B22]/90 p-3 sm:p-4 rounded-xl border border-[#30363D]">
 
-          <!-- Left 7 cols: Epoch Progress Bars -->
-          <div class="md:col-span-7 space-y-2.5 text-xs">
+          <!-- Left 7 cols: Epoch Progress Bars (2x2 compact grid on mobile, 4 rows on tablet/desktop) -->
+          <div class="md:col-span-7 grid grid-cols-2 sm:grid-cols-1 gap-2 sm:gap-2.5 text-[11px] sm:text-xs">
             <!-- Epoch 1 -->
-            <div>
-              <div class="flex justify-between text-[#8B949E] mb-0.5">
-                <span class="text-white font-semibold">Epoch 1/4 (2022 · Năm 1)</span>
-                <span>loss: <strong class="text-amber-400" id="ep1-loss">0.842</strong> · acc: <strong class="text-sky-400" id="ep1-acc">68.5%</strong></span>
+            <div class="bg-[#0D1117]/60 sm:bg-transparent p-2 sm:p-0 rounded-lg border border-[#30363D]/60 sm:border-0">
+              <div class="flex justify-between text-[#8B949E] mb-1">
+                <span class="text-white font-semibold">2022 · Năm 1</span>
+                <span class="font-code-en text-[10px] sm:text-xs"><strong class="text-sky-400" id="ep1-acc">68.5%</strong></span>
               </div>
-              <div class="w-full h-2 bg-[#21262D] rounded-full overflow-hidden">
+              <div class="w-full h-1.5 sm:h-2 bg-[#21262D] rounded-full overflow-hidden">
                 <div id="ep1-bar" class="h-full bg-gradient-to-r from-sky-500 to-emerald-400 transition-all duration-300" style="width: 0%;"></div>
               </div>
             </div>
 
             <!-- Epoch 2 -->
-            <div>
-              <div class="flex justify-between text-[#8B949E] mb-0.5">
-                <span class="text-white font-semibold">Epoch 2/4 (2023 · Năm 2)</span>
-                <span>loss: <strong class="text-amber-400" id="ep2-loss">0.315</strong> · acc: <strong class="text-sky-400" id="ep2-acc">84.2%</strong></span>
+            <div class="bg-[#0D1117]/60 sm:bg-transparent p-2 sm:p-0 rounded-lg border border-[#30363D]/60 sm:border-0">
+              <div class="flex justify-between text-[#8B949E] mb-1">
+                <span class="text-white font-semibold">2023 · Năm 2</span>
+                <span class="font-code-en text-[10px] sm:text-xs"><strong class="text-sky-400" id="ep2-acc">84.2%</strong></span>
               </div>
-              <div class="w-full h-2 bg-[#21262D] rounded-full overflow-hidden">
+              <div class="w-full h-1.5 sm:h-2 bg-[#21262D] rounded-full overflow-hidden">
                 <div id="ep2-bar" class="h-full bg-gradient-to-r from-sky-500 to-emerald-400 transition-all duration-300" style="width: 0%;"></div>
               </div>
             </div>
 
             <!-- Epoch 3 -->
-            <div>
-              <div class="flex justify-between text-[#8B949E] mb-0.5">
-                <span class="text-white font-semibold">Epoch 3/4 (2024 · Năm 3 &amp; OJT)</span>
-                <span>loss: <strong class="text-amber-400" id="ep3-loss">0.089</strong> · acc: <strong class="text-sky-400" id="ep3-acc">95.8%</strong></span>
+            <div class="bg-[#0D1117]/60 sm:bg-transparent p-2 sm:p-0 rounded-lg border border-[#30363D]/60 sm:border-0">
+              <div class="flex justify-between text-[#8B949E] mb-1">
+                <span class="text-white font-semibold">2024 · Năm 3 &amp; OJT</span>
+                <span class="font-code-en text-[10px] sm:text-xs"><strong class="text-sky-400" id="ep3-acc">95.8%</strong></span>
               </div>
-              <div class="w-full h-2 bg-[#21262D] rounded-full overflow-hidden">
+              <div class="w-full h-1.5 sm:h-2 bg-[#21262D] rounded-full overflow-hidden">
                 <div id="ep3-bar" class="h-full bg-gradient-to-r from-sky-500 to-emerald-400 transition-all duration-300" style="width: 0%;"></div>
               </div>
             </div>
 
             <!-- Epoch 4 -->
-            <div>
-              <div class="flex justify-between text-[#8B949E] mb-0.5">
-                <span class="text-[#FBF5B7] font-bold">Epoch 4/4 (2026 · Tốt Nghiệp K18 AI)</span>
-                <span>loss: <strong class="text-emerald-400" id="ep4-loss">0.0001</strong> · acc: <strong class="text-emerald-400 font-bold" id="ep4-acc">100.0% ✨</strong></span>
+            <div class="bg-[#0D1117]/80 sm:bg-transparent p-2 sm:p-0 rounded-lg border border-[#D4AF37]/50 sm:border-0">
+              <div class="flex justify-between text-[#8B949E] mb-1">
+                <span class="text-[#FBF5B7] font-bold">2026 · Tốt Nghiệp</span>
+                <span class="font-code-en text-[10px] sm:text-xs"><strong class="text-emerald-400 font-bold" id="ep4-acc">100% ✨</strong></span>
               </div>
-              <div class="w-full h-2.5 bg-[#21262D] rounded-full overflow-hidden border border-[#D4AF37]/40">
+              <div class="w-full h-2 sm:h-2.5 bg-[#21262D] rounded-full overflow-hidden border border-[#D4AF37]/40">
                 <div id="ep4-bar" class="h-full gold-foil-surface transition-all duration-300" style="width: 0%;"></div>
               </div>
             </div>
           </div>
 
-          <!-- Right 5 cols: Mini Loss & Accuracy Convergence Graph -->
-          <div class="md:col-span-5 bg-[#0D1117] p-3 rounded-xl border border-[#30363D]">
-            <div class="flex items-center justify-between text-xs mb-1">
+          <!-- Right 5 cols: Mini Loss & Accuracy Convergence Graph (Hidden on small mobile screens to save vertical space) -->
+          <div class="hidden md:block md:col-span-5 bg-[#0D1117] p-3 rounded-xl border border-[#30363D]">
+            <div class="flex items-center justify-between text-xs mb-1 font-code-en">
               <span class="text-emerald-400 font-bold">📈 Val_Acc: 100%</span>
               <span class="text-amber-400 font-bold">📉 Loss: 0.0001</span>
             </div>
             <svg class="w-full h-24 overflow-visible" viewBox="0 0 200 80">
-              <!-- Grid lines -->
               <line x1="0" y1="20" x2="200" y2="20" stroke="#21262D" stroke-width="1" />
               <line x1="0" y1="45" x2="200" y2="45" stroke="#21262D" stroke-width="1" />
               <line x1="0" y1="70" x2="200" y2="70" stroke="#21262D" stroke-width="1" />
-              <!-- Loss Curve (Amber -> drops down) -->
               <path id="svg-loss-curve" d="M 8 12 Q 65 28, 115 58 T 192 72" fill="none" stroke="#F59E0B" stroke-width="2.5" stroke-linecap="round" />
-              <!-- Accuracy Curve (Emerald -> climbs to 100%) -->
               <path id="svg-acc-curve" d="M 8 68 Q 65 40, 115 18 T 192 8" fill="none" stroke="#10B981" stroke-width="2.5" stroke-linecap="round" />
               <circle cx="192" cy="8" r="4" fill="#FBF5B7" />
               <circle cx="192" cy="72" r="3.5" fill="#F59E0B" />
             </svg>
-            <div class="flex justify-between text-xs text-[#8B949E] mt-1">
+            <div class="flex justify-between text-xs text-[#8B949E] mt-1 font-code-en">
               <span>2022</span>
               <span>2023</span>
               <span>2024</span>
@@ -248,22 +265,22 @@
         </div>
 
         <!-- Console Checkpoint & Guest Invitation Box -->
-        <div onclick="triggerNeuralAwakening()" class="cursor-pointer rounded-2xl p-4 sm:p-5 bg-gradient-to-br from-[#141E3C] via-[#101935] to-[#0D1117] border-2 border-[#D4AF37] shadow-lg group transition hover:border-[#FBF5B7]">
-          <div class="flex flex-wrap items-center justify-between gap-2 text-xs text-emerald-400 mb-2">
-            <span>✅ [CHECKPOINT SAVED] Model "Tân Cử Nhân AI — HÀ MINH DŨNG" Ready!</span>
-            <span class="text-[#D4AF37]">FPTU HCM · K18</span>
+        <div onclick="triggerNeuralAwakening()" class="cursor-pointer rounded-2xl p-3.5 sm:p-5 bg-gradient-to-br from-[#141E3C] via-[#101935] to-[#0D1117] border-2 border-[#D4AF37] shadow-lg group transition hover:border-[#FBF5B7]">
+          <div class="flex flex-wrap items-center justify-between gap-1.5 text-[11px] sm:text-xs text-emerald-400 mb-2 font-medium">
+            <span>✅ Tân Cử Nhân AI — <strong class="text-[#FBF5B7]">HÀ MINH DŨNG</strong></span>
+            <span class="text-[#D4AF37] font-bold">FPTU HCM · K18</span>
           </div>
 
-          <div class="text-center py-3 px-4 rounded-xl bg-[#090D16]/90 border border-[#D4AF37]/60">
-            <p class="text-xs text-sky-400 uppercase tracking-[0.18em] font-bold">
+          <div class="text-center py-2.5 sm:py-3 px-3 sm:px-4 rounded-xl bg-[#090D16]/90 border border-[#D4AF37]/60">
+            <p class="text-[11px] sm:text-xs text-sky-400 uppercase tracking-[0.15em] font-bold">
               ✦ TRÂN TRỌNG KÍNH MỜI BẠN ✦
             </p>
-            <h1 id="intro-guest-name" class="font-serif-luxury text-2xl sm:text-3xl font-bold gold-foil-text mt-1 tracking-wide break-words">
+            <h1 id="intro-guest-name" class="font-serif-luxury text-xl sm:text-3xl font-bold gold-foil-text mt-0.5 tracking-wide break-words">
               [ TÊN KHÁCH MỜI ]
             </h1>
           </div>
 
-          <div class="mt-3 grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs">
+          <div class="mt-2.5 grid grid-cols-1 sm:grid-cols-2 gap-1.5 sm:gap-2 text-xs">
             <div class="py-2 px-3 rounded-lg bg-white/5 border border-[#D4AF37]/40 text-[#FBF5B7] font-bold text-center">
               🕘 09:30 - 12:00 · Chủ Nhật, 08.11.2026
             </div>
@@ -273,9 +290,8 @@
           </div>
 
           <!-- Execute / Open Invitation Button -->
-          <button class="mt-4 w-full py-3 px-5 rounded-xl gold-foil-surface text-[#141E3C] font-extrabold text-xs sm:text-sm tracking-wide flex items-center justify-center gap-2 cursor-pointer transition-transform duration-300 group-hover:scale-[1.01]" style="animation: pulseTerminalBtn 2.4s infinite;">
-            <span>▶ $ python mo_thiep_moi.py --open</span>
-            <span class="px-2 py-0.5 rounded bg-[#141E3C] text-[#FBF5B7] text-xs">[ CHẠM ĐỂ MỞ THIỆP ]</span>
+          <button type="button" class="mt-3 sm:mt-4 w-full py-3 sm:py-3.5 px-4 rounded-xl gold-foil-surface text-[#141E3C] font-extrabold text-sm sm:text-base tracking-wide flex items-center justify-center gap-2 cursor-pointer transition-transform duration-300 group-hover:scale-[1.01] shadow-lg" style="animation: pulseTerminalBtn 2.4s infinite;">
+            <span>🎓 CHẠM ĐỂ MỞ THIỆP MỜI</span>
           </button>
         </div>
 
@@ -287,72 +303,79 @@
   <!-- ========================================================================= -->
   <!-- ACT 2 & 3: THE LIVING 3D HOLOGRAPHIC INVITATION + AI CAMPUS MAP           -->
   <!-- ========================================================================= -->
-  <main id="act3-stage" class="relative z-20 opacity-0 pointer-events-none transition-opacity duration-1000 min-h-screen flex flex-col items-center py-6 sm:py-10 px-4 sm:px-6 space-y-8">
+  <main id="act3-stage" class="relative z-20 opacity-0 pointer-events-none transition-opacity duration-1000 min-h-screen flex flex-col items-center py-4 sm:py-10 px-3 sm:px-6 space-y-6 sm:space-y-8">
 
     <!-- 1. TOP GUEST NAME & ULTRA-PROMINENT TIME + RENDEZVOUS BANNER -->
-    <header class="max-w-3xl mx-auto w-full text-center space-y-4">
-      <div class="inline-flex items-center gap-2 px-4 py-1 rounded-full bg-[#141E3C] text-[#FBF5B7] border border-[#D4AF37] text-xs font-mono-ai tracking-widest uppercase shadow-md">
+    <header class="max-w-3xl mx-auto w-full text-center space-y-3 sm:space-y-4">
+      <div class="inline-flex items-center gap-1.5 px-3 sm:px-4 py-1 rounded-full bg-[#141E3C] text-[#FBF5B7] border border-[#D4AF37] text-[10px] sm:text-xs font-bold tracking-wider sm:tracking-widest uppercase shadow-md">
         <span>FPT UNIVERSITY · ARTIFICIAL INTELLIGENCE · K18</span>
       </div>
 
       <!-- PROMINENT GUEST NAME SLOT -->
-      <div class="rounded-3xl py-4 px-6 royal-navy-surface border-2 border-[#D4AF37] shadow-[0_16px_45px_rgba(20,30,60,0.28)] relative overflow-hidden">
-        <p class="text-xs font-mono-ai tracking-[0.22em] text-[#38BDF8] uppercase font-bold">
+      <div class="rounded-2xl sm:rounded-3xl p-4 sm:p-6 royal-navy-surface border-2 border-[#D4AF37] shadow-[0_16px_45px_rgba(20,30,60,0.28)] relative overflow-hidden">
+        <p class="text-[11px] sm:text-xs tracking-[0.18em] text-[#38BDF8] uppercase font-bold">
           ✦ TRÂN TRỌNG KÍNH MỜI BẠN ✦
         </p>
-        <h2 id="stage-guest-name" class="font-serif-luxury text-2xl sm:text-4xl font-bold gold-foil-text mt-1 tracking-wide break-words">
+        <h2 id="stage-guest-name" class="font-serif-luxury text-2xl sm:text-4xl font-bold gold-foil-text mt-0.5 tracking-wide break-words">
           [ TÊN KHÁCH MỜI ]
         </h2>
 
         <!-- ULTRA-PROMINENT TIME & MEETING POINT SPOTLIGHT BAR -->
-        <div class="mt-4 pt-3.5 border-t border-[#D4AF37]/35 grid grid-cols-1 sm:grid-cols-2 gap-3 text-left">
-          <div class="p-3 rounded-2xl gold-foil-surface text-[#141E3C] shadow-md flex items-center gap-3">
-            <div class="w-11 h-11 rounded-xl bg-[#141E3C] text-[#FBF5B7] flex items-center justify-center text-xl font-bold shrink-0">
+        <div class="mt-3 sm:mt-4 pt-3 sm:pt-3.5 border-t border-[#D4AF37]/35 grid grid-cols-1 sm:grid-cols-2 gap-2.5 sm:gap-3 text-left">
+          <div class="p-3 rounded-xl sm:rounded-2xl gold-foil-surface text-[#141E3C] shadow-md flex items-center gap-3">
+            <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-[#141E3C] text-[#FBF5B7] flex items-center justify-center text-lg sm:text-xl font-bold shrink-0">
               🕘
             </div>
-            <div>
-              <span class="text-xs font-extrabold uppercase tracking-wider block opacity-80">KHUNG GIỜ ĐÓN TIẾP</span>
-              <strong class="text-base sm:text-lg font-extrabold block leading-tight">09:30 – 12:00 | 08.11.2026</strong>
+            <div class="min-w-0">
+              <span class="text-[11px] sm:text-xs font-extrabold uppercase tracking-wider block opacity-85">KHUNG GIỜ ĐÓN TIẾP</span>
+              <strong class="text-sm sm:text-lg font-extrabold block leading-snug">09:30 – 12:00 · 08.11.2026</strong>
               <span class="text-xs font-bold block">Chủ Nhật</span>
             </div>
           </div>
 
-          <div class="p-3 rounded-2xl bg-[#0D152C] text-[#FAF6EE] border-2 border-[#D4AF37] shadow-md flex items-center gap-3">
-            <div class="w-11 h-11 rounded-xl gold-foil-surface text-[#141E3C] flex items-center justify-center text-xl font-bold shrink-0">
+          <div class="p-3 rounded-xl sm:rounded-2xl bg-[#0D152C] text-[#FAF6EE] border-2 border-[#D4AF37] shadow-md flex items-center gap-3">
+            <div class="w-10 h-10 sm:w-11 sm:h-11 rounded-xl gold-foil-surface text-[#141E3C] flex items-center justify-center text-lg sm:text-xl font-bold shrink-0">
               📍
             </div>
-            <div>
-              <span class="text-xs font-extrabold uppercase tracking-wider text-[#38BDF8] block">ĐIỂM HẸN TẬP TRUNG</span>
-              <strong class="text-base sm:text-lg font-extrabold text-[#FBF5B7] block leading-tight">SẢNH TRỐNG ĐỒNG (TẦNG G)</strong>
-              <span class="text-xs text-[#D4AF37] font-semibold block">Góc dưới bên phải sơ đồ trường</span>
+            <div class="min-w-0">
+              <span class="text-[11px] sm:text-xs font-extrabold uppercase tracking-wider text-[#38BDF8] block">ĐIỂM HẸN TẬP TRUNG</span>
+              <strong class="text-sm sm:text-lg font-extrabold text-[#FBF5B7] block leading-snug">SẢNH TRỐNG ĐỒNG (TẦNG G)</strong>
+              <span class="text-[11px] sm:text-xs text-[#D4AF37] font-semibold block">Góc dưới bên phải sơ đồ trường</span>
             </div>
           </div>
         </div>
 
-        <!-- DIRECT CONTACT BAR: PHONE, ZALO, FACEBOOK MESSENGER -->
-        <div class="mt-3 pt-3 border-t border-[#D4AF37]/30 flex flex-wrap items-center justify-center gap-2 sm:gap-3 text-xs">
-          <span class="font-mono-ai text-[#E6C762] font-bold">📲 Liên hệ Dũng khi tới trường:</span>
-          <a href="tel:0938709235" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#0A1022] hover:bg-[#1E2F5D] border border-[#D4AF37]/60 text-[#FAF6EE] font-bold transition">
-            📞 0938 709 235
-          </a>
-          <a href="https://zalo.me/0938709235" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#0A1022] hover:bg-[#1E2F5D] border border-[#38BDF8]/60 text-[#7DD3FC] font-bold transition">
-            💬 Zalo: 0938 709 235
-          </a>
-          <a href="https://www.facebook.com/dung.haminh.161/" target="_blank" rel="noopener noreferrer" class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-[#0A1022] hover:bg-[#1E2F5D] border border-[#60A5FA]/60 text-[#93C5FD] font-bold transition">
-            💙 Messenger / Facebook
-          </a>
+        <!-- DIRECT CONTACT BAR: PHONE, ZALO, FACEBOOK MESSENGER (THUMB-FRIENDLY 3-COL ON MOBILE) -->
+        <div class="mt-3 pt-3 border-t border-[#D4AF37]/30 space-y-2">
+          <div class="text-xs text-[#E6C762] font-bold text-center">
+            📲 Liên hệ Dũng khi tới trường (SĐT / Zalo: <span class="text-[#FAF6EE]">0938 709 235</span>):
+          </div>
+          <div class="grid grid-cols-3 gap-2 text-xs">
+            <a href="tel:0938709235" class="flex items-center justify-center gap-1 py-2.5 px-2 rounded-xl bg-[#0A1022] hover:bg-[#1E2F5D] border border-[#D4AF37]/70 text-[#FAF6EE] font-bold transition shadow-sm">
+              <span>📞</span>
+              <span class="truncate">Gọi điện</span>
+            </a>
+            <a href="https://zalo.me/0938709235" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center gap-1 py-2.5 px-2 rounded-xl bg-[#0A1022] hover:bg-[#1E2F5D] border border-[#38BDF8]/70 text-[#7DD3FC] font-bold transition shadow-sm">
+              <span>💬</span>
+              <span class="truncate">Nhắn Zalo</span>
+            </a>
+            <a href="https://www.facebook.com/dung.haminh.161/" target="_blank" rel="noopener noreferrer" class="flex items-center justify-center gap-1 py-2.5 px-2 rounded-xl bg-[#0A1022] hover:bg-[#1E2F5D] border border-[#60A5FA]/70 text-[#93C5FD] font-bold transition shadow-sm">
+              <span>💙</span>
+              <span class="truncate">Messenger</span>
+            </a>
+          </div>
         </div>
       </div>
     </header>
 
     <!-- 2. CENTERPIECE: 3D HOLOGRAPHIC INVITATION CARD (WITH LASER MATERIALIZATION) -->
-    <section class="w-full flex flex-col items-center justify-center">
-      <div class="stage-3d w-full max-w-[470px] mx-auto relative">
+    <section class="w-full flex flex-col items-center justify-center pt-2">
+      <div class="stage-3d w-full max-w-[460px] mx-auto relative">
 
         <div id="card-rig" class="card-rig-3d idle-floating relative">
 
           <!-- Z-LAYER -55px: Floating 3D Golden Đông Sơn × Neural Halo behind the card -->
-          <div class="z-layer-back absolute -inset-10 sm:-inset-14 pointer-events-none flex items-center justify-center opacity-75">
+          <div class="z-layer-back absolute -inset-3 sm:-inset-12 pointer-events-none flex items-center justify-center opacity-70">
             <svg class="w-full h-full text-[#C59B27]/25" style="animation: spinSlow 70s linear infinite;" viewBox="0 0 300 300" fill="none">
               <circle cx="150" cy="150" r="144" stroke="currentColor" stroke-width="1.2" stroke-dasharray="5 4"/>
               <circle cx="150" cy="150" r="126" stroke="currentColor" stroke-width="1.5"/>
@@ -362,19 +385,19 @@
           </div>
 
           <!-- CARD FRAME -->
-          <div class="relative rounded-3xl p-2.5 sm:p-3 gold-foil-surface shadow-[0_30px_75px_-12px_rgba(20,30,60,0.45)] cursor-pointer" onclick="toggleCardPose()">
-            <div class="relative rounded-2xl overflow-hidden bg-[#FAF6EE] border border-[#141E3C]/15">
+          <div class="relative rounded-2xl sm:rounded-3xl p-2 sm:p-3 gold-foil-surface shadow-[0_25px_65px_-12px_rgba(20,30,60,0.45)] cursor-pointer" onclick="toggleCardPose()">
+            <div class="relative rounded-xl sm:rounded-2xl overflow-hidden bg-[#FAF6EE] border border-[#141E3C]/15">
 
               <!-- Blueprint Wireframe Layer -->
-              <div id="laser-blueprint" class="blueprint-grid absolute inset-0 z-20 flex flex-col items-center justify-center p-8 text-center transition-opacity duration-300">
-                <svg class="w-24 h-24 text-[#D4AF37] animate-spin" style="animation-duration: 8s;" viewBox="0 0 100 100" fill="none">
+              <div id="laser-blueprint" class="blueprint-grid absolute inset-0 z-20 flex flex-col items-center justify-center p-6 text-center transition-opacity duration-300">
+                <svg class="w-20 h-20 sm:w-24 sm:h-24 text-[#D4AF37] animate-spin" style="animation-duration: 8s;" viewBox="0 0 100 100" fill="none">
                   <circle cx="50" cy="50" r="44" stroke="currentColor" stroke-width="1.5" stroke-dasharray="6 4"/>
                   <polygon points="50,14 55,40 78,22 62,44 88,43 64,54 84,71 59,62 65,88 50,66 35,88 41,62 16,71 36,54 12,43 38,44 22,22 45,40" fill="currentColor" fill-opacity="0.35"/>
                 </svg>
-                <p class="font-mono-ai text-xs text-emerald-400 tracking-widest uppercase mt-4">
+                <p class="font-code-en text-xs text-emerald-400 tracking-widest uppercase mt-4">
                   RENDERING GRADUATION CARD...
                 </p>
-                <p id="laser-progress-txt" class="font-mono-ai text-lg font-bold text-[#FBF5B7] mt-1">
+                <p id="laser-progress-txt" class="font-code-en text-lg font-bold text-[#FBF5B7] mt-1">
                   0%
                 </p>
               </div>
@@ -389,14 +412,25 @@
               <div id="holo-glare" class="holo-glare absolute inset-0 opacity-60 transition-opacity duration-300"></div>
             </div>
 
-            <!-- Z-LAYER +42px: Floating 3D Foreground Time & Location Badges -->
-            <div class="z-layer-front absolute -top-3.5 -right-3.5 px-4 py-1.5 rounded-full bg-[#141E3C] text-[#FBF5B7] border-2 border-[#D4AF37] text-xs font-extrabold shadow-xl flex items-center gap-1.5">
+            <!-- Z-LAYER +42px: Floating 3D Foreground Time Badge (Centered on mobile so it never overflows) -->
+            <div class="z-layer-front absolute -top-3.5 left-1/2 -translate-x-1/2 sm:left-auto sm:translate-x-0 sm:-right-3 px-3.5 py-1 rounded-full bg-[#141E3C] text-[#FBF5B7] border-2 border-[#D4AF37] text-[11px] sm:text-xs font-extrabold shadow-xl flex items-center gap-1.5 whitespace-nowrap">
               <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
               <span>09:30 - 12:00 · Chủ Nhật 08.11</span>
             </div>
-            
           </div>
 
+        </div>
+
+        <!-- MOBILE-FRIENDLY QUICK CARD ACTIONS (SWITCH POSE & DOWNLOAD JPG) -->
+        <div class="mt-3.5 grid grid-cols-2 gap-2.5">
+          <button type="button" onclick="toggleCardPose()" class="py-2.5 px-3 rounded-xl bg-[#141E3C] hover:bg-[#1E2F5D] text-[#FAF6EE] border border-[#D4AF37]/80 font-bold text-xs sm:text-sm shadow-md flex items-center justify-center gap-1.5 cursor-pointer transition">
+            <span>🔄</span>
+            <span>Đổi kiểu ảnh (1/2)</span>
+          </button>
+          <button type="button" onclick="downloadVisitorCardJpg()" class="py-2.5 px-3 rounded-xl bg-[#D4AF37] hover:bg-[#E0BE4C] text-[#0F172A] font-extrabold text-xs sm:text-sm shadow-md flex items-center justify-center gap-1.5 cursor-pointer transition">
+            <span>📥</span>
+            <span>Lưu ảnh thiệp</span>
+          </button>
         </div>
       </div>
     </section>
@@ -422,7 +456,10 @@
         </div>
 
         <!-- Map Container with Accurate Walkway Routes & Entrances (1024x576) -->
-        <div class="mt-4 relative rounded-2xl overflow-hidden border-2 border-[#D4AF37]/80 shadow-xl bg-white">
+        <div onclick="openMapLightbox()" class="mt-3.5 relative rounded-2xl overflow-hidden border-2 border-[#D4AF37]/80 shadow-xl bg-white cursor-zoom-in group">
+          <div class="sm:hidden bg-[#0A1022] text-[#E6C762] text-[11px] font-bold py-1.5 px-3 text-center border-b border-[#D4AF37]/40 flex items-center justify-center gap-1.5">
+            <span>🔍 Chạm vào sơ đồ để phóng to xem rõ từng lối đi</span>
+          </div>
           <img id="campus-map-img" alt="Sơ đồ Tầng G Đại học FPT TP.HCM — Điểm hẹn Sảnh Trống Đồng" class="w-full h-auto block" />
 
           <!-- SVG Overlay aligned 100% with the white walkways on the 1024x576 map -->
@@ -432,7 +469,7 @@
             <!-- Bãi gửi xe phía sau dãy nhà 037 (Top area) -->
             <g transform="translate(465, 56)">
               <rect x="-155" y="-20" width="310" height="36" rx="10" fill="#141E3C" fill-opacity="0.92" stroke="#D4AF37" stroke-width="2" stroke-dasharray="5 3" />
-              <text x="0" y="4" text-anchor="middle" fill="#FBF5B7" font-size="14" font-weight="bold" font-family="Segoe UI, Arial, sans-serif">
+              <text x="0" y="4" text-anchor="middle" fill="#FBF5B7" font-size="14" font-weight="bold" font-family="'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif">
                 🛵 BÃI GỬI XE (Phía sau dãy nhà 037)
               </text>
             </g>
@@ -440,7 +477,7 @@
             <!-- Bãi gửi xe phía bên trái ảnh (Left edge, rotated vertically) -->
             <g transform="translate(52, 285) rotate(-90)">
               <rect x="-115" y="-18" width="230" height="34" rx="10" fill="#141E3C" fill-opacity="0.92" stroke="#D4AF37" stroke-width="2" stroke-dasharray="5 3" />
-              <text x="0" y="4" text-anchor="middle" fill="#FBF5B7" font-size="13.5" font-weight="bold" font-family="Segoe UI, Arial, sans-serif">
+              <text x="0" y="4" text-anchor="middle" fill="#FBF5B7" font-size="13.5" font-weight="bold" font-family="'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif">
                 🛵 BÃI GỬI XE (Phía bên trái)
               </text>
             </g>
@@ -538,7 +575,7 @@
             </g>
             <g transform="translate(135, 392)">
               <rect x="-66" y="-15" width="132" height="26" rx="8" fill="#065F46" stroke="#FBF5B7" stroke-width="1.5" />
-              <text x="0" y="2" text-anchor="middle" fill="#FBF5B7" font-size="12" font-weight="bold" font-family="Segoe UI, Arial, sans-serif">
+              <text x="0" y="2" text-anchor="middle" fill="#FBF5B7" font-size="12" font-weight="bold" font-family="'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif">
                 ① Cổng Passio
               </text>
             </g>
@@ -549,7 +586,7 @@
             </g>
             <g transform="translate(918, 502)">
               <rect x="-88" y="-15" width="176" height="28" rx="8" fill="#991B1B" stroke="#FBF5B7" stroke-width="1.5" />
-              <text x="0" y="3" text-anchor="middle" fill="#FBF5B7" font-size="12" font-weight="bold" font-family="Segoe UI, Arial, sans-serif">
+              <text x="0" y="3" text-anchor="middle" fill="#FBF5B7" font-size="12" font-weight="bold" font-family="'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif">
                 ② Cổng Sảnh Trống Đồng
               </text>
             </g>
@@ -560,7 +597,7 @@
             </g>
             <g transform="translate(235, 95)">
               <rect x="-62" y="-14" width="124" height="26" rx="8" fill="#141E3C" stroke="#D4AF37" stroke-width="1.5" />
-              <text x="0" y="3" text-anchor="middle" fill="#FBF5B7" font-size="12" font-weight="bold" font-family="Segoe UI, Arial, sans-serif">
+              <text x="0" y="3" text-anchor="middle" fill="#FBF5B7" font-size="12" font-weight="bold" font-family="'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif">
                 ③ Lối chữ Cổng
               </text>
             </g>
@@ -574,7 +611,7 @@
             </g>
             <g transform="translate(795, 72)">
               <rect x="-92" y="-14" width="184" height="26" rx="8" fill="#075985" stroke="#FBF5B7" stroke-width="1.5" />
-              <text x="0" y="3" text-anchor="middle" fill="#FBF5B7" font-size="12" font-weight="bold" font-family="Segoe UI, Arial, sans-serif">
+              <text x="0" y="3" text-anchor="middle" fill="#FBF5B7" font-size="12" font-weight="bold" font-family="'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif">
                 ④ Lối kế 028 &amp; 7-Eleven
               </text>
             </g>
@@ -591,10 +628,10 @@
             <g transform="translate(665, 355)" style="animation: pinBounce 2.4s ease-in-out infinite;">
               <line x1="130" y1="22" x2="205" y2="66" stroke="#141E3C" stroke-width="3.5" />
               <rect x="-135" y="-28" width="270" height="54" rx="14" fill="#141E3C" stroke="#D4AF37" stroke-width="3" />
-              <text x="0" y="-4" text-anchor="middle" fill="#FBF5B7" font-size="15.5" font-weight="bold" font-family="Segoe UI, Arial, sans-serif">
+              <text x="0" y="-4" text-anchor="middle" fill="#FBF5B7" font-size="15.5" font-weight="bold" font-family="'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif">
                 📍 ĐIỂM HẸN: SẢNH TRỐNG ĐỒNG
               </text>
-              <text x="0" y="16" text-anchor="middle" fill="#38BDF8" font-size="12.5" font-weight="bold" font-family="Segoe UI, Arial, sans-serif">
+              <text x="0" y="16" text-anchor="middle" fill="#38BDF8" font-size="12.5" font-weight="bold" font-family="'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif">
                 (Góc dưới bên phải · Tầng G)
               </text>
             </g>
@@ -666,7 +703,7 @@
             </h3>
 
             <div class="mt-3.5 space-y-3">
-              <textarea id="wish-message-input" rows="4" placeholder="Đôi lời thầm kín gửi Zunzun..." class="w-full px-3.5 py-3 rounded-xl bg-[#0A1022] border border-[#D4AF37]/55 text-[#FAF6EE] placeholder-[#94A3B8] text-sm focus:outline-none focus:border-[#E6C762] resize-none leading-relaxed"></textarea>
+              <textarea id="wish-message-input" rows="4" placeholder="Đôi lời thầm kín gửi Zunzun..." class="w-full px-3.5 py-3 rounded-xl bg-[#0A1022] border border-[#D4AF37]/55 text-[#FAF6EE] placeholder-[#94A3B8] text-base sm:text-sm focus:outline-none focus:border-[#E6C762] resize-none leading-relaxed"></textarea>
 
               <button type="button" id="wish-submit-btn" onclick="submitGraduationWish()" class="w-full py-2.5 px-5 rounded-xl bg-[#D4AF37] hover:bg-[#E0BE4C] text-[#0F172A] font-extrabold text-sm tracking-wide shadow-md transition flex items-center justify-center cursor-pointer">
                 Gửi
@@ -715,13 +752,33 @@
       </div>
     </section>
 
+
+    <!-- FULLSCREEN MAP LIGHTBOX FOR MOBILE PINCH-ZOOM -->
+    <div id="map-lightbox" onclick="closeMapLightbox()" class="fixed inset-0 z-50 hidden bg-black/90 backdrop-blur-md flex flex-col items-center justify-center p-2 sm:p-6">
+      <div class="w-full max-w-5xl flex items-center justify-between px-3 py-2 text-xs sm:text-sm text-[#FBF5B7] font-bold">
+        <span>📍 Sơ Đồ Tầng G ĐH FPT — Điểm hẹn: Sảnh Trống Đồng</span>
+        <button type="button" onclick="closeMapLightbox()" class="px-3 py-1.5 rounded-xl bg-[#D4AF37] text-[#0F172A] font-extrabold text-xs cursor-pointer">
+          ✕ Đóng
+        </button>
+      </div>
+      <div class="w-full max-w-5xl overflow-auto rounded-2xl border-2 border-[#D4AF37] bg-white" onclick="event.stopPropagation()">
+        <img id="map-lightbox-img" alt="Sơ đồ Tầng G ĐH FPT TP.HCM" class="w-full min-w-[680px] sm:min-w-0 h-auto block" />
+      </div>
+      <p class="text-[11px] text-[#CBD5E1] mt-2 sm:hidden">👉 Vuốt ngang hoặc dùng 2 ngón tay phóng to để xem chi tiết sơ đồ</p>
+    </div>
   </main>
 
   <!-- ========================================================================= -->
   <!-- SCRIPTS                                                                   -->
   <!-- ========================================================================= -->
   <script>
-    const ASSETS = { card1: "./assets/card1.webp", card2: "./assets/card2.webp", map: "./assets/map-tang-g.webp" };
+    const ASSETS = {
+      card1: "./assets/card1.webp",
+      card2: "./assets/card2.webp",
+      card1_base: "./assets/card1_base.webp",
+      card2_base: "./assets/card2_base.webp",
+      map: "./assets/map-tang-g.webp"
+    };
     const IMAGES = {};
     let currentPose = 'card1';
     let guestName = '';
@@ -736,24 +793,32 @@
 
       if (toParam && toParam.trim()) {
         guestName = toParam.trim();
-        const testWidget = document.getElementById('test-name-widget');
-        if (testWidget) testWidget.style.display = 'none';
       }
 
       document.getElementById('campus-map-img').src = ASSETS.map;
+      const lbImg = document.getElementById('map-lightbox-img');
+      if (lbImg) lbImg.src = ASSETS.map;
 
+      const keys = ['card1', 'card2', 'card1_base', 'card2_base'];
       let loaded = 0;
-      ['card1', 'card2'].forEach(k => {
+      keys.forEach(k => {
+        if (!ASSETS[k]) return;
         const im = new Image();
         im.onload = () => {
           IMAGES[k] = im;
           loaded++;
-          if (loaded === 2) {
+          if (loaded >= 2) {
             updateAllGuestNameSlots();
           }
         };
         im.src = ASSETS[k];
       });
+
+      if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(() => {
+          renderCardCanvas();
+        });
+      }
 
       initEpochTrainingAnimation();
       initNeural3DCanvas();
@@ -795,7 +860,10 @@
     // Draw High-Res 09:30 - 12:00 + Sảnh Trống Đồng Card with "TRÂN TRỌNG KÍNH MỜI BẠN" + Guest Name Slot
     function renderCardCanvas() {
       const canvas = document.getElementById('card-canvas');
-      const baseImg = IMAGES[currentPose] || IMAGES.card1;
+      const hasName = Boolean(guestName && guestName.trim() && guestName !== '[ TÊN KHÁCH MỜI ]');
+      const baseImg = hasName
+        ? (IMAGES[currentPose + '_base'] || IMAGES[currentPose] || IMAGES.card1)
+        : (IMAGES[currentPose] || IMAGES.card1);
       if (!canvas || !baseImg) return;
 
       const ctx = canvas.getContext('2d');
@@ -805,11 +873,10 @@
       ctx.drawImage(baseImg, 0, 0);
 
       // 1. DEDICATED GUEST NAME SLOT (y = 806..866) — Only drawn when guestName is provided!
-      const hasName = Boolean(guestName && guestName.trim() && guestName !== '[ TÊN KHÁCH MỜI ]');
       if (!hasName) return;
       const cx = canvas.width / 2; // 448
       const nameStr = guestName.trim();
-      const boxW = Math.min(740, Math.max(480, nameStr.length * 22 + 140));
+      const boxW = Math.min(750, Math.max(480, nameStr.length * 22 + 150));
       const boxH = 60;
       const boxX = cx - boxW / 2;
       const boxY = 806;
@@ -852,17 +919,41 @@
 
       ctx.textAlign = 'center';
       ctx.fillStyle = '#8A640F';
-      ctx.font = 'bold 12.5px "Segoe UI", Arial, sans-serif';
+      ctx.font = '700 12.5px "Be Vietnam Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Arial, sans-serif';
       ctx.fillText('TRÂN TRỌNG KÍNH MỜI BẠN', cx, boxY + 19);
 
       let fSize = 25;
       if (nameStr.length > 28) fSize = 20;
       else if (nameStr.length > 22) fSize = 22;
       ctx.fillStyle = '#141E3C';
-      ctx.font = `bold ${fSize}px "Palatino Linotype", Georgia, "Times New Roman", serif`;
-      ctx.fillText(nameStr, cx, boxY + 48);
+      ctx.font = `700 ${fSize}px "Lora", "Be Vietnam Pro", Georgia, serif`;
+      ctx.fillText(nameStr, cx, boxY + 47);
 
       ctx.restore();
+    }
+
+    function downloadVisitorCardJpg() {
+      const canvas = document.getElementById('card-canvas');
+      if (!canvas) return;
+      const rawName = (guestName && guestName.trim() && guestName !== '[ TÊN KHÁCH MỜI ]') ? guestName.trim() : 'Thiep_Chung';
+      const slug = rawName
+        .normalize('NFD').replace(/[\u0300-\u036f]/g, '')
+        .replace(/đ/g, 'd').replace(/Đ/g, 'D')
+        .replace(/[^a-zA-Z0-9]+/g, '_').replace(/^_|_$/g, '') || 'Thiep_Moi';
+      const a = document.createElement('a');
+      a.download = `Thiep_Tot_Nghiep_HaMinhDung_${slug}.jpg`;
+      a.href = canvas.toDataURL('image/jpeg', 0.96);
+      a.click();
+    }
+
+    function openMapLightbox() {
+      const lb = document.getElementById('map-lightbox');
+      if (lb) lb.classList.remove('hidden');
+    }
+
+    function closeMapLightbox() {
+      const lb = document.getElementById('map-lightbox');
+      if (lb) lb.classList.add('hidden');
     }
 
     function toggleCardPose() {
@@ -946,18 +1037,16 @@
         }
       };
 
-      window.addEventListener('mousemove', e => {
-        if (currentAct === 3) onMove(e.clientX, e.clientY);
-      });
-      window.addEventListener('touchmove', e => {
-        if (currentAct === 3 && e.touches && e.touches[0]) {
-          onMove(e.touches[0].clientX, e.touches[0].clientY);
-        }
-      }, { passive: true });
-
-      window.addEventListener('mouseout', () => {
-        rig.classList.add('idle-floating');
-      });
+      const isFinePointer = window.matchMedia && window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+      if (isFinePointer) {
+        window.addEventListener('mousemove', e => {
+          if (currentAct === 3) onMove(e.clientX, e.clientY);
+        });
+        window.addEventListener('mouseout', () => {
+          rig.style.transform = '';
+          rig.classList.add('idle-floating');
+        });
+      }
     }
 
     function initNeural3DCanvas() {

@@ -455,20 +455,22 @@
           </div>
         </div>
 
+        <!-- Mobile Zoom Hint Banner (Outside the relative map coordinate box so SVG never shifts!) -->
+        <div onclick="openMapLightbox()" class="sm:hidden mt-3 rounded-xl bg-[#0A1022] text-[#E6C762] text-[11px] font-bold py-1.5 px-3 text-center border border-[#D4AF37]/50 flex items-center justify-center gap-1.5 cursor-pointer">
+          <span>🔍 Chạm vào sơ đồ bên dưới để phóng to xem rõ từng lối đi</span>
+        </div>
+
         <!-- Map Container with Accurate Walkway Routes & Entrances (1024x576) -->
-        <div onclick="openMapLightbox()" class="mt-3.5 relative rounded-2xl overflow-hidden border-2 border-[#D4AF37]/80 shadow-xl bg-white cursor-zoom-in group">
-          <div class="sm:hidden bg-[#0A1022] text-[#E6C762] text-[11px] font-bold py-1.5 px-3 text-center border-b border-[#D4AF37]/40 flex items-center justify-center gap-1.5">
-            <span>🔍 Chạm vào sơ đồ để phóng to xem rõ từng lối đi</span>
-          </div>
+        <div id="campus-map-stage" onclick="openMapLightbox()" class="mt-2.5 sm:mt-4 relative w-full rounded-2xl overflow-hidden border-2 border-[#D4AF37]/80 shadow-xl bg-white cursor-zoom-in">
           <img id="campus-map-img" alt="Sơ đồ Tầng G Đại học FPT TP.HCM — Điểm hẹn Sảnh Trống Đồng" class="w-full h-auto block" />
 
           <!-- SVG Overlay aligned 100% with the white walkways on the 1024x576 map -->
-          <svg class="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 1024 576">
+          <svg id="campus-map-svg" class="absolute inset-0 w-full h-full pointer-events-none" viewBox="0 0 1024 576">
 
             <!-- ==================== 2 BÃI GỬI XE (PARKING ZONES) ==================== -->
             <!-- Bãi gửi xe phía sau dãy nhà 037 (Top area) -->
             <g transform="translate(465, 56)">
-              <rect x="-155" y="-20" width="310" height="36" rx="10" fill="#141E3C" fill-opacity="0.92" stroke="#D4AF37" stroke-width="2" stroke-dasharray="5 3" />
+              <rect x="-170" y="-20" width="340" height="36" rx="10" fill="#141E3C" fill-opacity="0.92" stroke="#D4AF37" stroke-width="2" stroke-dasharray="5 3" />
               <text x="0" y="4" text-anchor="middle" fill="#FBF5B7" font-size="14" font-weight="bold" font-family="'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif">
                 🛵 BÃI GỬI XE (Phía sau dãy nhà 037)
               </text>
@@ -476,7 +478,7 @@
 
             <!-- Bãi gửi xe phía bên trái ảnh (Left edge, rotated vertically) -->
             <g transform="translate(52, 285) rotate(-90)">
-              <rect x="-115" y="-18" width="230" height="34" rx="10" fill="#141E3C" fill-opacity="0.92" stroke="#D4AF37" stroke-width="2" stroke-dasharray="5 3" />
+              <rect x="-126" y="-18" width="252" height="34" rx="10" fill="#141E3C" fill-opacity="0.92" stroke="#D4AF37" stroke-width="2" stroke-dasharray="5 3" />
               <text x="0" y="4" text-anchor="middle" fill="#FBF5B7" font-size="13.5" font-weight="bold" font-family="'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif">
                 🛵 BÃI GỬI XE (Phía bên trái)
               </text>
@@ -574,7 +576,7 @@
               <circle r="10" fill="#059669" stroke="#FFFFFF" stroke-width="2.5" />
             </g>
             <g transform="translate(135, 392)">
-              <rect x="-66" y="-15" width="132" height="26" rx="8" fill="#065F46" stroke="#FBF5B7" stroke-width="1.5" />
+              <rect x="-72" y="-15" width="144" height="26" rx="8" fill="#065F46" stroke="#FBF5B7" stroke-width="1.5" />
               <text x="0" y="2" text-anchor="middle" fill="#FBF5B7" font-size="12" font-weight="bold" font-family="'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif">
                 ① Cổng Passio
               </text>
@@ -585,7 +587,7 @@
               <circle r="10" fill="#DC2626" stroke="#FFFFFF" stroke-width="2.5" />
             </g>
             <g transform="translate(918, 502)">
-              <rect x="-88" y="-15" width="176" height="28" rx="8" fill="#991B1B" stroke="#FBF5B7" stroke-width="1.5" />
+              <rect x="-98" y="-15" width="196" height="28" rx="8" fill="#991B1B" stroke="#FBF5B7" stroke-width="1.5" />
               <text x="0" y="3" text-anchor="middle" fill="#FBF5B7" font-size="12" font-weight="bold" font-family="'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif">
                 ② Cổng Sảnh Trống Đồng
               </text>
@@ -596,7 +598,7 @@
               <circle r="9" fill="#059669" stroke="#FFFFFF" stroke-width="2.5" />
             </g>
             <g transform="translate(235, 95)">
-              <rect x="-62" y="-14" width="124" height="26" rx="8" fill="#141E3C" stroke="#D4AF37" stroke-width="1.5" />
+              <rect x="-68" y="-14" width="136" height="26" rx="8" fill="#141E3C" stroke="#D4AF37" stroke-width="1.5" />
               <text x="0" y="3" text-anchor="middle" fill="#FBF5B7" font-size="12" font-weight="bold" font-family="'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif">
                 ③ Lối chữ Cổng
               </text>
@@ -610,7 +612,7 @@
               <circle r="9" fill="#0284C7" stroke="#FFFFFF" stroke-width="2.5" />
             </g>
             <g transform="translate(795, 72)">
-              <rect x="-92" y="-14" width="184" height="26" rx="8" fill="#075985" stroke="#FBF5B7" stroke-width="1.5" />
+              <rect x="-102" y="-14" width="204" height="26" rx="8" fill="#075985" stroke="#FBF5B7" stroke-width="1.5" />
               <text x="0" y="3" text-anchor="middle" fill="#FBF5B7" font-size="12" font-weight="bold" font-family="'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif">
                 ④ Lối kế 028 &amp; 7-Eleven
               </text>
@@ -625,15 +627,17 @@
             </g>
 
             <!-- Callout Box for SẢNH TRỐNG ĐỒNG -->
-            <g transform="translate(665, 355)" style="animation: pinBounce 2.4s ease-in-out infinite;">
+            <g transform="translate(665, 355)">
               <line x1="130" y1="22" x2="205" y2="66" stroke="#141E3C" stroke-width="3.5" />
-              <rect x="-135" y="-28" width="270" height="54" rx="14" fill="#141E3C" stroke="#D4AF37" stroke-width="3" />
-              <text x="0" y="-4" text-anchor="middle" fill="#FBF5B7" font-size="15.5" font-weight="bold" font-family="'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif">
-                📍 ĐIỂM HẸN: SẢNH TRỐNG ĐỒNG
-              </text>
-              <text x="0" y="16" text-anchor="middle" fill="#38BDF8" font-size="12.5" font-weight="bold" font-family="'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif">
-                (Góc dưới bên phải · Tầng G)
-              </text>
+              <g style="animation: pinBounce 2.4s ease-in-out infinite;">
+                <rect x="-150" y="-28" width="300" height="54" rx="14" fill="#141E3C" stroke="#D4AF37" stroke-width="3" />
+                <text x="0" y="-4" text-anchor="middle" fill="#FBF5B7" font-size="15" font-weight="bold" font-family="'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif">
+                  📍 ĐIỂM HẸN: SẢNH TRỐNG ĐỒNG
+                </text>
+                <text x="0" y="16" text-anchor="middle" fill="#38BDF8" font-size="12.5" font-weight="bold" font-family="'Be Vietnam Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif">
+                  (Góc dưới bên phải · Tầng G)
+                </text>
+              </g>
             </g>
 
           </svg>
@@ -753,18 +757,21 @@
     </section>
 
 
-    <!-- FULLSCREEN MAP LIGHTBOX FOR MOBILE PINCH-ZOOM -->
+    <!-- FULLSCREEN MAP LIGHTBOX FOR MOBILE PINCH-ZOOM (INCLUDES FULL SVG OVERLAY) -->
     <div id="map-lightbox" onclick="closeMapLightbox()" class="fixed inset-0 z-50 hidden bg-black/90 backdrop-blur-md flex flex-col items-center justify-center p-2 sm:p-6">
-      <div class="w-full max-w-5xl flex items-center justify-between px-3 py-2 text-xs sm:text-sm text-[#FBF5B7] font-bold">
+      <div class="w-full max-w-5xl flex items-center justify-between px-2 py-2 text-xs sm:text-sm text-[#FBF5B7] font-bold">
         <span>📍 Sơ Đồ Tầng G ĐH FPT — Điểm hẹn: Sảnh Trống Đồng</span>
-        <button type="button" onclick="closeMapLightbox()" class="px-3 py-1.5 rounded-xl bg-[#D4AF37] text-[#0F172A] font-extrabold text-xs cursor-pointer">
+        <button type="button" onclick="closeMapLightbox()" class="px-3.5 py-1.5 rounded-xl bg-[#D4AF37] text-[#0F172A] font-extrabold text-xs cursor-pointer">
           ✕ Đóng
         </button>
       </div>
-      <div class="w-full max-w-5xl overflow-auto rounded-2xl border-2 border-[#D4AF37] bg-white" onclick="event.stopPropagation()">
-        <img id="map-lightbox-img" alt="Sơ đồ Tầng G ĐH FPT TP.HCM" class="w-full min-w-[680px] sm:min-w-0 h-auto block" />
+      <div class="w-full max-w-5xl overflow-x-auto rounded-2xl border-2 border-[#D4AF37] bg-white" onclick="event.stopPropagation()">
+        <div id="map-lightbox-inner" class="relative min-w-[720px] sm:min-w-0 w-full">
+          <img id="map-lightbox-img" alt="Sơ đồ Tầng G ĐH FPT TP.HCM" class="w-full h-auto block" />
+          <div id="map-lightbox-svg-holder" class="absolute inset-0 w-full h-full pointer-events-none"></div>
+        </div>
       </div>
-      <p class="text-[11px] text-[#CBD5E1] mt-2 sm:hidden">👉 Vuốt ngang hoặc dùng 2 ngón tay phóng to để xem chi tiết sơ đồ</p>
+      <p class="text-[11px] text-[#CBD5E1] mt-2 sm:hidden">👉 Vuốt ngang qua phải để xem toàn cảnh tới Sảnh Trống Đồng</p>
     </div>
   </main>
 
@@ -948,6 +955,13 @@
 
     function openMapLightbox() {
       const lb = document.getElementById('map-lightbox');
+      const svgOrig = document.getElementById('campus-map-svg');
+      const holder = document.getElementById('map-lightbox-svg-holder');
+      if (svgOrig && holder && !holder.innerHTML) {
+        const clone = svgOrig.cloneNode(true);
+        clone.removeAttribute('id');
+        holder.appendChild(clone);
+      }
       if (lb) lb.classList.remove('hidden');
     }
 
